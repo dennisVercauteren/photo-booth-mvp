@@ -39,8 +39,8 @@ export function GeneratingScreen({
           </>
         ) : (
           <>
-            <h1>Creating {PORTRAIT_CHOICE_COUNT} portraits...</h1>
-            <p className="lede">They are made at the same time.</p>
+            <h1>Making {PORTRAIT_CHOICE_COUNT} magic pictures...</h1>
+            <p className="lede">Hold tight, the magic takes a few seconds!</p>
             <div className="progress" role="progressbar" aria-label="Creating portrait">
               <span />
             </div>

@@ -14,7 +14,7 @@ export function ReviewScreen({ photo, style, onUse, onRetake }: ReviewScreenProp
       <header className="screen-header compact-header">
         <div>
           <p className="eyebrow">{style?.displayName ?? "Review"}</p>
-          <h1>Use this photo?</h1>
+          <h1>Looking good! Use this one?</h1>
         </div>
       </header>
       <div className="portrait-frame">

@@ -17,7 +17,7 @@ export function StyleScreen({ restyle, onBack, onChoose }: StyleScreenProps) {
         </button>
         <div>
           <p className="eyebrow">Choose a style</p>
-          <h1>Where do you want to go?</h1>
+          <h1>Who do you want to be?</h1>
           {restyle ? <p className="header-note">Your original photo will be used again.</p> : null}
         </div>
       </header>
@@ -33,7 +33,8 @@ export function StyleScreen({ restyle, onBack, onChoose }: StyleScreenProps) {
             }}
             onClick={() => onChoose(style)}
           >
-            <span className="style-index">{String(index + 1).padStart(2, "0")}</span>
+            {style.thumbnail ? <img className="style-thumb" src={style.thumbnail} alt="" /> : null}
+            <span className="style-index">{index + 1}</span>
             <span className="style-copy">
               <span className="style-name">{style.displayName}</span>
               <span className="style-description">{style.shortDescription}</span>

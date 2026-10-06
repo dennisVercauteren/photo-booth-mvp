@@ -48,8 +48,8 @@ export function ResultScreen({
     <main className="screen result-screen">
       <header className="screen-header compact-header">
         <div>
-          <p className="eyebrow">Your portraits</p>
-          <h1>{options.length > 1 ? "Choose your favourite" : "Your portrait"}</h1>
+          <p className="eyebrow">Ta-da!</p>
+          <h1>{options.length > 1 ? "Pick your favourite!" : "Your portrait"}</h1>
           {DEVELOPER_MODE ? (
             <p className="dev-timing">Portrait {selected.metadata.variant}: {formatDuration(selected.metadata.durationMs)}</p>
           ) : null}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+**/.env
+!.env.example
+!**/.env.example
+outputs/**
+!outputs/.gitkeep
+server/logs/**
+!server/logs/.gitkeep
+.DS_Store
+Thumbs.db
+*.local

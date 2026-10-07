@@ -258,7 +258,11 @@ async function readSettingsResponse(response: Response): Promise<BoothSettingsRe
     throw new Error("Settings were malformed.");
   }
   return {
-    settings: { imageCount: body.settings.imageCount },
+    // A server without the colour fix setting leaves it on.
+    settings: {
+      imageCount: body.settings.imageCount,
+      colorFix: typeof body.settings.colorFix === "boolean" ? body.settings.colorFix : true,
+    },
     limits: { maxImageCount: body.limits.maxImageCount },
   };
 }

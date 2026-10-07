@@ -261,6 +261,7 @@ export function App() {
           style={selectedStyle}
           deviceId={deviceId}
           retryToken={cameraRetry}
+          colorFix={settings?.settings.colorFix ?? true}
           onLiveChange={onLiveChange}
           onBack={() => dispatch({ type: "back" })}
           onCaptured={(photo) => dispatch({ type: "photo-ready", photo })}

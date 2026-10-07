@@ -21,7 +21,7 @@ export function createSettingsRouter(): Router {
       next(new AppError(400, ErrorCode.Validation, error instanceof Error ? error.message : "Invalid settings."));
       return;
     }
-    console.info(`[settings] imageCount=${settings.imageCount}`);
+    console.info(`[settings] imageCount=${settings.imageCount} colorFix=${settings.colorFix}`);
     res.json({ settings, limits: { maxImageCount: MAX_IMAGE_COUNT } });
   });
 

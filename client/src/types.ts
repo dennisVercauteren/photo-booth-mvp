@@ -39,6 +39,8 @@ export type CameraIssue = "denied" | "unavailable" | "busy" | "unsupported" | "u
 
 export interface BoothSettings {
   imageCount: number;
+  /** Colour correction for the NoIR camera (see camera/colorFix.ts). */
+  colorFix: boolean;
 }
 
 export interface BoothSettingsResponse {

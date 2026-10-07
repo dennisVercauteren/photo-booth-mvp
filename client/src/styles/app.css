@@ -462,6 +462,16 @@ button:disabled {
   transform: scaleX(-1);
 }
 
+/* Colour-fixed preview: the canvas shows, the video keeps playing underneath as its source. */
+.fixed-preview {
+  position: absolute;
+  inset: 0;
+}
+
+.hidden-preview {
+  opacity: 0;
+}
+
 .camera-waiting,
 .camera-message {
   color: var(--muted);

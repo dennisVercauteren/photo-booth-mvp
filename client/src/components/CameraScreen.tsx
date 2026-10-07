@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { playCountdown, playShutter } from "../audio/sound";
 import { photoFromFile, captureVideoFrame } from "../camera/capture";
+import { ColorFixRenderer } from "../camera/colorFix";
 import { cameraIssueMessage, useCamera, type LiveCamera } from "../camera/useCamera";
 import { COUNTDOWN_STEP_MS, COUNTDOWN_STEPS, DEVELOPER_MODE } from "../config/developer";
 import type { PhotoStyle } from "../config/styles";
@@ -11,6 +12,7 @@ interface CameraScreenProps {
   style: PhotoStyle | undefined;
   deviceId: string;
   retryToken: number;
+  colorFix: boolean;
   onLiveChange: (live: LiveCamera | null) => void;
   onBack: () => void;
   onCaptured: (photo: CapturedPhoto) => void;
@@ -21,6 +23,7 @@ export function CameraScreen({
   style,
   deviceId,
   retryToken,
+  colorFix,
   onLiveChange,
   onBack,
   onCaptured,
@@ -30,13 +33,43 @@ export function CameraScreen({
   const [count, setCount] = useState<string | null>(null);
   const [flash, setFlash] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [fixActive, setFixActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const fixCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rendererRef = useRef<ColorFixRenderer | null>(null);
   const busyRef = useRef(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
     onLiveChange(live);
   }, [live, onLiveChange]);
+
+  // Draw the colour-fixed preview. If WebGL fails, the plain video stays visible.
+  useEffect(() => {
+    const video = videoRef.current;
+    const canvas = fixCanvasRef.current;
+    if (!colorFix || status !== "live" || !video || !canvas) {
+      setFixActive(false);
+      return;
+    }
+    try {
+      rendererRef.current ??= new ColorFixRenderer(canvas);
+    } catch (error) {
+      console.error("[color-fix]", error instanceof Error ? error.message : error);
+      setFixActive(false);
+      return;
+    }
+    const renderer = rendererRef.current;
+    let frame = 0;
+    const tick = () => {
+      if (renderer.draw(video)) {
+        setFixActive(true);
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [colorFix, status, videoRef]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -70,7 +103,9 @@ export function CameraScreen({
       setFlash(true);
       playShutter();
       await wait(160);
-      const photo = await captureVideoFrame(video, live?.label ?? "Camera");
+      const renderer = fixActive ? rendererRef.current : null;
+      const corrected = renderer?.draw(video) ? renderer.canvas : null;
+      const photo = await captureVideoFrame(video, live?.label ?? "Camera", corrected);
       if (!mountedRef.current) {
         return;
       }
@@ -115,7 +150,15 @@ export function CameraScreen({
 
       <div className="camera-stage">
         <div className="video-shell">
-          <video ref={videoRef} className="live-preview" autoPlay muted playsInline aria-label="Live camera preview" />
+          <video
+            ref={videoRef}
+            className={fixActive ? "live-preview hidden-preview" : "live-preview"}
+            autoPlay
+            muted
+            playsInline
+            aria-label="Live camera preview"
+          />
+          <canvas ref={fixCanvasRef} className={fixActive ? "live-preview fixed-preview" : "hidden-input"} aria-hidden="true" />
           {status === "live" && !issue ? <FramingGuide /> : null}
           {status !== "live" && !issue ? <p className="camera-waiting">Starting camera...</p> : null}
         </div>

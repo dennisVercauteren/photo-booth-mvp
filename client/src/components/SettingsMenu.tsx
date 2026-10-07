@@ -69,6 +69,7 @@ export function SettingsMenu({ current, onSaved, onClose }: SettingsMenuProps) {
 
 function PhotosPanel({ current, onSaved, onClose }: SettingsMenuProps) {
   const [imageCount, setImageCount] = useState(current.settings.imageCount);
+  const [colorFix, setColorFix] = useState(current.settings.colorFix);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const counts = Array.from({ length: current.limits.maxImageCount }, (_, index) => index + 1);
@@ -77,7 +78,7 @@ function PhotosPanel({ current, onSaved, onClose }: SettingsMenuProps) {
     setSaving(true);
     setError(null);
     try {
-      onSaved(await saveSettings({ imageCount }));
+      onSaved(await saveSettings({ imageCount, colorFix }));
       onClose();
     } catch (saveError) {
       setError(errorText(saveError, "Could not save settings."));
@@ -101,6 +102,24 @@ function PhotosPanel({ current, onSaved, onClose }: SettingsMenuProps) {
               onClick={() => setImageCount(count)}
             >
               {count}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="settings-field">
+        <p className="settings-label">Camera colour fix</p>
+        <p className="settings-hint">For the NoIR camera: turns purple clothes back to blue. Switch off with a normal camera.</p>
+        <div className="settings-options" role="radiogroup" aria-label="Camera colour fix">
+          {[true, false].map((value) => (
+            <button
+              key={String(value)}
+              type="button"
+              role="radio"
+              aria-checked={value === colorFix}
+              className={value === colorFix ? "settings-option selected" : "settings-option"}
+              onClick={() => setColorFix(value)}
+            >
+              {value ? "On" : "Off"}
             </button>
           ))}
         </div>

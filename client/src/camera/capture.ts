@@ -4,7 +4,15 @@ import type { CapturedPhoto } from "../types";
 /** Width / height of the photo the guest sees and we send: a 4x5 portrait. */
 export const CAPTURE_ASPECT = 4 / 5;
 
-export async function captureVideoFrame(video: HTMLVideoElement, cameraLabel: string): Promise<CapturedPhoto> {
+/**
+ * Captures the current frame. With `corrected` (a canvas the colour fix just drew the same
+ * frame on) the photo is taken from that canvas, so it matches the preview.
+ */
+export async function captureVideoFrame(
+  video: HTMLVideoElement,
+  cameraLabel: string,
+  corrected?: HTMLCanvasElement | null,
+): Promise<CapturedPhoto> {
   const sourceWidth = video.videoWidth;
   const sourceHeight = video.videoHeight;
   if (!sourceWidth || !sourceHeight) {
@@ -25,7 +33,7 @@ export async function captureVideoFrame(video: HTMLVideoElement, cameraLabel: st
     throw new Error("The photo could not be captured.");
   }
 
-  context.drawImage(video, left, top, width, height, 0, 0, width, height);
+  context.drawImage(corrected ?? video, left, top, width, height, 0, 0, width, height);
   const blob = await canvasToJpeg(canvas);
   const dataUrl = await blobToDataUrl(blob);
 

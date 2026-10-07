@@ -6,12 +6,15 @@ import { PORTRAIT_VARIATIONS } from "../styles/variations.js";
 /** Booth settings an operator can change from the in-app menu. Stored outside the release folder. */
 export interface BoothSettings {
   imageCount: number;
+  /** Colour correction for the NoIR (no infrared filter) camera, applied in the browser. */
+  colorFix: boolean;
 }
 
 export const MAX_IMAGE_COUNT = PORTRAIT_VARIATIONS.length;
 
 const DEFAULT_SETTINGS: BoothSettings = {
   imageCount: MAX_IMAGE_COUNT,
+  colorFix: true,
 };
 
 let cached: BoothSettings | null = null;
@@ -54,6 +57,12 @@ function parseSettings(input: unknown): Partial<BoothSettings> {
       throw new Error(`imageCount must be a whole number from 1 to ${MAX_IMAGE_COUNT}.`);
     }
     result.imageCount = count;
+  }
+  if ("colorFix" in input) {
+    if (typeof input.colorFix !== "boolean") {
+      throw new Error("colorFix must be true or false.");
+    }
+    result.colorFix = input.colorFix;
   }
   return result;
 }

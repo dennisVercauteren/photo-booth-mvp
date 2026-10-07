@@ -14,6 +14,13 @@ const PURPLE_START = 245;
 const PURPLE_FADE_IN = 20;
 const PURPLE_END = 358;
 const PURPLE_FADE_OUT = 18;
+/**
+ * Only pixels with real colour are fixed: chroma (max - min channel) ramps the fix in from
+ * CHROMA_MIN to CHROMA_FULL. Dark hair and shadows are noisy with a random hue but low
+ * chroma (~0.01-0.04); without this they flicker blue. IR-purple clothing measured ~0.08-0.12.
+ */
+const CHROMA_MIN = 0.045;
+const CHROMA_FULL = 0.075;
 /** Hue the purple is moved to (navy blue) and how far (0-1). */
 const TARGET_HUE = 228;
 const HUE_SHIFT = 0.9;
@@ -60,7 +67,8 @@ void main() {
   vec3 rgb = clamp(texture2D(frame, uv).rgb * vec3(${glFloat(WHITE_BALANCE[0])}, ${glFloat(WHITE_BALANCE[1])}, ${glFloat(WHITE_BALANCE[2])}), 0.0, 1.0);
   vec3 hsv = rgbToHsv(rgb);
   float band = clamp(min((hsv.x - ${glFloat(PURPLE_START)}) / ${glFloat(PURPLE_FADE_IN)}, (${glFloat(PURPLE_END)} - hsv.x) / ${glFloat(PURPLE_FADE_OUT)}), 0.0, 1.0);
-  float weight = band * clamp((hsv.y - 0.04) / 0.08, 0.0, 1.0);
+  float chroma = hsv.y * hsv.z;
+  float weight = band * clamp((chroma - ${glFloat(CHROMA_MIN)}) / ${glFloat(CHROMA_FULL - CHROMA_MIN)}, 0.0, 1.0);
   hsv.x += (${glFloat(TARGET_HUE)} - hsv.x) * weight * ${glFloat(HUE_SHIFT)};
   hsv.y = clamp(hsv.y * (1.0 + ${glFloat(SATURATION_BOOST)} * weight), 0.0, 1.0);
   hsv.z *= 1.0 - ${glFloat(DARKEN)} * weight;

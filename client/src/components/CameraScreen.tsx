@@ -60,15 +60,24 @@ export function CameraScreen({
       return;
     }
     const renderer = rendererRef.current;
+    // Redraw only when the camera delivers a new frame, not on every screen refresh: the
+    // upload to the GPU is costly on a Pi and starved the Bluetooth audio.
     let frame = 0;
+    let stopped = false;
     const tick = () => {
+      if (stopped) {
+        return;
+      }
       if (renderer.draw(video)) {
         setFixActive(true);
       }
-      frame = requestAnimationFrame(tick);
+      frame = video.requestVideoFrameCallback(tick);
     };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    frame = video.requestVideoFrameCallback(tick);
+    return () => {
+      stopped = true;
+      video.cancelVideoFrameCallback(frame);
+    };
   }, [colorFix, status, videoRef]);
 
   useEffect(() => {

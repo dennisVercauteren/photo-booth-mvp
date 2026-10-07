@@ -6,6 +6,7 @@ import { validateImage } from "../images/validateImage.js";
 import type { ImageGenerationProvider, SourceImage } from "../providers/types.js";
 import { logGeneration } from "../services/generationLog.js";
 import { saveGeneratedImage, saveSourceImage } from "../services/outputStore.js";
+import { getSettings } from "../services/settingsStore.js";
 import { styleService } from "../styles/styleService.js";
 import { PORTRAIT_VARIATIONS } from "../styles/variations.js";
 
@@ -35,9 +36,10 @@ export function createGenerateRouter(provider: ImageGenerationProvider): Router 
       const image = validateImage(req.file);
       const sessionId = readSessionId(req.body);
       const source = { bytes: image.bytes, mimeType: image.mimeType };
+      const { imageCount } = await getSettings();
 
       const settled = await Promise.allSettled(
-        PORTRAIT_VARIATIONS.map((variation, index) =>
+        PORTRAIT_VARIATIONS.slice(0, imageCount).map((variation, index) =>
           renderVariation({
             provider,
             styleId: style.id,

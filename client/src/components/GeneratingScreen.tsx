@@ -1,8 +1,8 @@
-import { PORTRAIT_CHOICE_COUNT } from "../config/developer";
 import type { CapturedPhoto } from "../types";
 
 interface GeneratingScreenProps {
   photo: CapturedPhoto;
+  imageCount: number;
   errorMessage: string | null;
   onRetry: () => void;
   onRetake: () => void;
@@ -11,6 +11,7 @@ interface GeneratingScreenProps {
 
 export function GeneratingScreen({
   photo,
+  imageCount,
   errorMessage,
   onRetry,
   onRetake,
@@ -39,7 +40,7 @@ export function GeneratingScreen({
           </>
         ) : (
           <>
-            <h1>Making {PORTRAIT_CHOICE_COUNT} magic pictures...</h1>
+            <h1>{imageCount === 1 ? "Making your magic picture..." : `Making ${imageCount} magic pictures...`}</h1>
             <p className="lede">Hold tight, the magic takes a few seconds!</p>
             <div className="progress" role="progressbar" aria-label="Creating portrait">
               <span />

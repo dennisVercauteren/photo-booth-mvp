@@ -1,5 +1,5 @@
 import { API_BASE } from "../config/developer";
-import type { BoothMeta, GeneratedPhoto, GenerateMetadata } from "../types";
+import type { BoothMeta, BoothSettings, BoothSettingsResponse, GeneratedPhoto, GenerateMetadata } from "../types";
 
 export class GenerateClientError extends Error {
   readonly code: string;
@@ -227,4 +227,38 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isAbortError(error: unknown): boolean {
   return error instanceof DOMException && error.name === "AbortError";
+}
+
+export async function fetchSettings(signal?: AbortSignal): Promise<BoothSettingsResponse> {
+  const response = await fetch(`${API_BASE}/api/settings`, { signal });
+  return readSettingsResponse(response);
+}
+
+export async function saveSettings(settings: BoothSettings): Promise<BoothSettingsResponse> {
+  const response = await fetch(`${API_BASE}/api/settings`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings),
+  });
+  return readSettingsResponse(response);
+}
+
+async function readSettingsResponse(response: Response): Promise<BoothSettingsResponse> {
+  if (!response.ok) {
+    throw new Error(`Settings request failed (${response.status}).`);
+  }
+  const body: unknown = await response.json();
+  if (
+    !isRecord(body)
+    || !isRecord(body.settings)
+    || typeof body.settings.imageCount !== "number"
+    || !isRecord(body.limits)
+    || typeof body.limits.maxImageCount !== "number"
+  ) {
+    throw new Error("Settings were malformed.");
+  }
+  return {
+    settings: { imageCount: body.settings.imageCount },
+    limits: { maxImageCount: body.limits.maxImageCount },
+  };
 }

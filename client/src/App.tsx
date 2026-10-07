@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { fetchBoothMeta, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
+import { fetchBoothMeta, fetchSettings, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
 import { CameraScreen } from "./components/CameraScreen";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { GeneratingScreen } from "./components/GeneratingScreen";
 import { ResultScreen } from "./components/ResultScreen";
 import { ReviewScreen } from "./components/ReviewScreen";
+import { SettingsMenu } from "./components/SettingsMenu";
 import { StartScreen } from "./components/StartScreen";
 import { StyleScreen } from "./components/StyleScreen";
-import { CAMERA_STORAGE_KEY, CLIENT_GENERATE_TIMEOUT_MS, DEVELOPER_MODE } from "./config/developer";
+import { CAMERA_STORAGE_KEY, CLIENT_GENERATE_TIMEOUT_MS, DEFAULT_IMAGE_COUNT, DEVELOPER_MODE } from "./config/developer";
 import { getStyleById, PHOTO_STYLES } from "./config/styles";
 import type { LiveCamera } from "./camera/useCamera";
 import { createSessionState, sessionReducer } from "./session/reducer";
-import type { BoothMeta } from "./types";
+import type { BoothMeta, BoothSettingsResponse } from "./types";
 
 export function App() {
   const [state, dispatch] = useReducer(sessionReducer, undefined, createSessionState);
@@ -19,6 +20,8 @@ export function App() {
   const [cameraRetry, setCameraRetry] = useState(0);
   const [cameraLive, setCameraLive] = useState<LiveCamera | null>(null);
   const [meta, setMeta] = useState<BoothMeta | null>(null);
+  const [settings, setSettings] = useState<BoothSettingsResponse | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const onLiveChange = useCallback((live: LiveCamera | null) => {
     setCameraLive(live);
@@ -46,6 +49,25 @@ export function App() {
       controller.abort();
     };
   }, []);
+
+  // Reload on every return to the start screen so the count shown matches what the server will make.
+  useEffect(() => {
+    if (state.screen !== "start") {
+      return;
+    }
+    const controller = new AbortController();
+    void fetchSettings(controller.signal)
+      .then(setSettings)
+      .catch((error: unknown) => {
+        if (isAbortError(error)) {
+          return;
+        }
+        console.error("[settings]", error instanceof Error ? error.message : error);
+      });
+    return () => {
+      controller.abort();
+    };
+  }, [state.screen]);
 
   useEffect(() => {
     if (!DEVELOPER_MODE) {
@@ -163,7 +185,12 @@ export function App() {
   let screen;
   switch (state.screen) {
     case "start":
-      screen = <StartScreen onStart={() => dispatch({ type: "begin" })} />;
+      screen = (
+        <StartScreen
+          onStart={() => dispatch({ type: "begin" })}
+          onOpenSettings={settings ? () => setSettingsOpen(true) : undefined}
+        />
+      );
       break;
     case "style":
       screen = (
@@ -203,6 +230,7 @@ export function App() {
       screen = state.photo ? (
         <GeneratingScreen
           photo={state.photo}
+          imageCount={settings?.settings.imageCount ?? DEFAULT_IMAGE_COUNT}
           errorMessage={state.errorMessage}
           onRetry={() => dispatch({ type: "retry-generation" })}
           onRetake={() => dispatch({ type: "retake" })}
@@ -236,6 +264,9 @@ export function App() {
   return (
     <div className="booth">
       {screen}
+      {settingsOpen && settings && state.screen === "start" ? (
+        <SettingsMenu current={settings} onSaved={setSettings} onClose={() => setSettingsOpen(false)} />
+      ) : null}
       {DEVELOPER_MODE ? (
         <DeveloperPanel
           sessionId={state.sessionId}

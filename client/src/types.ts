@@ -36,3 +36,12 @@ export interface CameraDeviceOption {
 }
 
 export type CameraIssue = "denied" | "unavailable" | "busy" | "unsupported" | "unknown";
+
+export interface BoothSettings {
+  imageCount: number;
+}
+
+export interface BoothSettingsResponse {
+  settings: BoothSettings;
+  limits: { maxImageCount: number };
+}

@@ -12,4 +12,5 @@ export const COUNTDOWN_STEP_MS = 900;
 
 export const CLIENT_GENERATE_TIMEOUT_MS = 130_000;
 
-export const PORTRAIT_CHOICE_COUNT = 3;
+/** Used until the booth settings have loaded. */
+export const DEFAULT_IMAGE_COUNT = 3;

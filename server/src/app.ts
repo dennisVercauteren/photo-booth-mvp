@@ -1,9 +1,12 @@
 import cors from "cors";
 import express from "express";
-import { config } from "./config.js";
+import fs from "node:fs";
+import path from "node:path";
+import { config, paths } from "./config.js";
 import { errorMiddleware } from "./http/errorMiddleware.js";
 import { createImageProvider } from "./providers/createProvider.js";
 import { createGenerateRouter } from "./routes/generate.js";
+import { createSettingsRouter } from "./routes/settings.js";
 import { createUpscaleRouter } from "./routes/upscale.js";
 import { styleService } from "./styles/styleService.js";
 
@@ -39,6 +42,7 @@ export function createApp() {
 
   app.use("/api", createGenerateRouter(provider));
   app.use("/api", createUpscaleRouter());
+  app.use("/api", createSettingsRouter());
 
   app.use("/api", (_req, res) => {
     res.status(404).json({
@@ -49,6 +53,14 @@ export function createApp() {
       },
     });
   });
+
+  // Serve the built booth UI so the kiosk needs only this one process.
+  if (fs.existsSync(paths.clientDist)) {
+    app.use(express.static(paths.clientDist));
+    app.get("/{*path}", (_req, res) => {
+      res.sendFile(path.join(paths.clientDist, "index.html"));
+    });
+  }
 
   app.use(errorMiddleware);
   return app;

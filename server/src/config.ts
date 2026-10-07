@@ -89,7 +89,10 @@ export const paths = {
   serverRoot,
   repoRoot,
   outputs: path.join(repoRoot, "outputs"),
+  clientDist: path.join(repoRoot, "client", "dist"),
   logs: path.join(serverRoot, "logs"),
+  // Keep this outside the release folder so operator settings survive updates.
+  settingsFile: path.resolve(serverRoot, readString("BOOTH_SETTINGS_FILE", "settings.json")),
 };
 
 const imageSize = readChoice("GEMINI_IMAGE_SIZE", "1K", IMAGE_SIZES);

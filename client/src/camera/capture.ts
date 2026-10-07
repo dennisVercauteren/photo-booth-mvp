@@ -1,12 +1,21 @@
 import { JPEG_QUALITY } from "../config/developer";
 import type { CapturedPhoto } from "../types";
 
+/** Width / height of the photo the guest sees and we send: a 4x5 portrait. */
+export const CAPTURE_ASPECT = 4 / 5;
+
 export async function captureVideoFrame(video: HTMLVideoElement, cameraLabel: string): Promise<CapturedPhoto> {
-  const width = video.videoWidth;
-  const height = video.videoHeight;
-  if (!width || !height) {
+  const sourceWidth = video.videoWidth;
+  const sourceHeight = video.videoHeight;
+  if (!sourceWidth || !sourceHeight) {
     throw new Error("The camera frame is not ready.");
   }
+
+  // Crop the centre of the camera frame to the portrait shape shown on screen.
+  const width = Math.round(Math.min(sourceWidth, sourceHeight * CAPTURE_ASPECT));
+  const height = Math.round(width / CAPTURE_ASPECT);
+  const left = Math.round((sourceWidth - width) / 2);
+  const top = Math.round((sourceHeight - height) / 2);
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -16,7 +25,7 @@ export async function captureVideoFrame(video: HTMLVideoElement, cameraLabel: st
     throw new Error("The photo could not be captured.");
   }
 
-  context.drawImage(video, 0, 0, width, height);
+  context.drawImage(video, left, top, width, height, 0, 0, width, height);
   const blob = await canvasToJpeg(canvas);
   const dataUrl = await blobToDataUrl(blob);
 

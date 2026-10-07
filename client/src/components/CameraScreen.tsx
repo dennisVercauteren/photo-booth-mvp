@@ -101,8 +101,6 @@ export function CameraScreen({
     }
   }
 
-  const aspectRatio = live && live.width > 0 && live.height > 0 ? `${live.width} / ${live.height}` : "16 / 9";
-
   return (
     <main className="screen camera-screen">
       <header className="screen-header">
@@ -116,7 +114,7 @@ export function CameraScreen({
       </header>
 
       <div className="camera-stage">
-        <div className="video-shell" style={{ aspectRatio }}>
+        <div className="video-shell">
           <video ref={videoRef} className="live-preview" autoPlay muted playsInline aria-label="Live camera preview" />
           {status === "live" && !issue ? <FramingGuide /> : null}
           {status !== "live" && !issue ? <p className="camera-waiting">Starting camera...</p> : null}

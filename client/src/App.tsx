@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { fetchBoothMeta, fetchSettings, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
+import { playError, playSelect, playTada, playTap, playWhoosh, startMusic, stopMusic } from "./audio/sound";
 import { CameraScreen } from "./components/CameraScreen";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { GeneratingScreen } from "./components/GeneratingScreen";
@@ -13,6 +14,8 @@ import { getStyleById, PHOTO_STYLES } from "./config/styles";
 import type { LiveCamera } from "./camera/useCamera";
 import { createSessionState, sessionReducer } from "./session/reducer";
 import type { BoothMeta, BoothSettingsResponse } from "./types";
+
+const MUSIC_IDLE_MS = 120_000;
 
 export function App() {
   const [state, dispatch] = useReducer(sessionReducer, undefined, createSessionState);
@@ -68,6 +71,57 @@ export function App() {
       controller.abort();
     };
   }, [state.screen]);
+
+  // Music plays for the whole session and fades out on the start screen; each step gets its own effect.
+  const previousScreenRef = useRef(state.screen);
+  useEffect(() => {
+    const previous = previousScreenRef.current;
+    previousScreenRef.current = state.screen;
+    if (state.screen === "start") {
+      stopMusic();
+      return;
+    }
+    startMusic();
+    if (previous === state.screen) {
+      return;
+    }
+    if (state.screen === "camera" && previous === "style") {
+      playSelect();
+    } else if (state.screen === "generating") {
+      playWhoosh();
+    } else if (state.screen === "result") {
+      playTada();
+    }
+  }, [state.screen]);
+
+  useEffect(() => {
+    if (state.errorMessage) {
+      playError();
+    }
+  }, [state.errorMessage]);
+
+  // Taps click; the music stops when nobody has touched the screen for a while and comes back on the next tap.
+  const screenRef = useRef(state.screen);
+  screenRef.current = state.screen;
+  useEffect(() => {
+    let quietTimer = window.setTimeout(stopMusic, MUSIC_IDLE_MS);
+    function onPointerDown(event: PointerEvent): void {
+      const button = event.target instanceof Element ? event.target.closest("button") : null;
+      if (button && !button.disabled) {
+        playTap();
+      }
+      window.clearTimeout(quietTimer);
+      quietTimer = window.setTimeout(stopMusic, MUSIC_IDLE_MS);
+      if (screenRef.current !== "start") {
+        startMusic();
+      }
+    }
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.clearTimeout(quietTimer);
+      window.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, []);
 
   useEffect(() => {
     if (!DEVELOPER_MODE) {

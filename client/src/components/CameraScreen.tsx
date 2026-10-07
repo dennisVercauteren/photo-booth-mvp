@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { playCountdown, playShutter } from "../audio/sound";
 import { photoFromFile, captureVideoFrame } from "../camera/capture";
 import { cameraIssueMessage, useCamera, type LiveCamera } from "../camera/useCamera";
 import { COUNTDOWN_STEP_MS, COUNTDOWN_STEPS, DEVELOPER_MODE } from "../config/developer";
@@ -59,6 +60,7 @@ export function CameraScreen({
           return;
         }
         setCount(step);
+        playCountdown(step === COUNTDOWN_STEPS[COUNTDOWN_STEPS.length - 1]);
         await wait(COUNTDOWN_STEP_MS);
       }
       if (!mountedRef.current) {
@@ -66,6 +68,7 @@ export function CameraScreen({
       }
       setCount(null);
       setFlash(true);
+      playShutter();
       await wait(160);
       const photo = await captureVideoFrame(video, live?.label ?? "Camera");
       if (!mountedRef.current) {

@@ -79,6 +79,8 @@ button:disabled {
   height: 100%;
   min-height: 0;
   display: grid;
+  /* One column that never grows past the screen, however big the photo is. */
+  grid-template-columns: minmax(0, 1fr);
   padding: 28px 40px 28px;
   gap: 20px;
 }
@@ -927,8 +929,9 @@ button:disabled {
     height: 12px;
   }
 
+  /* Same 16px margin on every side; the bottom adds room for the 6px button shadow. */
   .screen {
-    padding: 16px 16px 18px;
+    padding: 16px 16px 22px;
     gap: 14px;
   }
 
@@ -1058,9 +1061,14 @@ button:disabled {
     display: none;
   }
 
-  /* Camera: the preview takes the full width. */
+  /* Camera: the 4:5 preview is as big as the space between title and button allows. */
+  .camera-stage {
+    height: 100%;
+    container-type: size;
+  }
+
   .video-shell {
-    width: 100%;
+    width: min(100cqw, 100cqh * 4 / 5);
     border-width: 4px;
     border-radius: 20px;
     box-shadow: 0 6px 0 var(--pink), 0 14px 30px rgba(45, 27, 78, 0.22);
@@ -1093,9 +1101,31 @@ button:disabled {
     box-shadow: 0 6px 0 var(--yellow), 0 14px 30px rgba(45, 27, 78, 0.22);
   }
 
+  /*
+   * Review and result: the photo fills whatever space is left between the title
+   * and the buttons, scaled down to fit and centred. Large (upscaled) photos would
+   * otherwise push the buttons off the bottom and right edge.
+   */
+  .review-screen > .portrait-frame,
+  .choice-stage .portrait-frame {
+    height: 100%;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .review-screen > .portrait-frame img,
   .choice-stage .portrait-frame img {
+    position: absolute;
+    inset: 0 0 8px;
+    width: auto;
+    height: auto;
     max-width: 100%;
-    max-height: calc(100dvh - 400px);
+    max-height: calc(100% - 8px);
+    margin: auto;
+  }
+
+  .generating-screen .portrait-frame img {
+    max-width: 100%;
   }
 
   .choice-row {

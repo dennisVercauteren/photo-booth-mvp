@@ -7,6 +7,7 @@ import { errorMiddleware } from "./http/errorMiddleware.js";
 import { createImageProvider } from "./providers/createProvider.js";
 import { createGenerateRouter } from "./routes/generate.js";
 import { createDeviceRouter } from "./routes/device.js";
+import { createGalleryRouter } from "./routes/gallery.js";
 import { createSettingsRouter } from "./routes/settings.js";
 import { createUpscaleRouter } from "./routes/upscale.js";
 import { styleService } from "./styles/styleService.js";
@@ -45,6 +46,7 @@ export function createApp() {
   app.use("/api", createUpscaleRouter());
   app.use("/api", createSettingsRouter());
   app.use("/api", createDeviceRouter());
+  app.use(createGalleryRouter());
 
   app.use("/api", (_req, res) => {
     res.status(404).json({

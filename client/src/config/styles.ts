@@ -80,10 +80,80 @@ export const PHOTO_STYLES: readonly PhotoStyle[] = [
     thumbnail: "/examples/dark-fantasy.jpg",
     theme: { from: "#6366f1", to: "#22d3ee", ink: "#0c0912" },
   },
+  {
+    id: "pop-band",
+    displayName: "Pop Girl Band",
+    shortDescription: "Glitter, platforms and a screaming crowd.",
+    enabled: true,
+    thumbnail: "/examples/pop-band.jpg",
+    theme: { from: "#ff4fd8", to: "#ffd84f", ink: "#2a0626" },
+  },
+  {
+    id: "cage-fighter",
+    displayName: "Cage Fighter",
+    shortDescription: "Fight night in the octagon.",
+    enabled: true,
+    thumbnail: "/examples/cage-fighter.jpg",
+    theme: { from: "#ef233c", to: "#3a3a4a", ink: "#160608" },
+  },
+  {
+    id: "football",
+    displayName: "Football Star",
+    shortDescription: "Win the final in a packed stadium.",
+    enabled: true,
+    thumbnail: "/examples/football.jpg",
+    theme: { from: "#16a34a", to: "#a3e635", ink: "#06150b" },
+  },
+  {
+    id: "clown",
+    displayName: "Circus Clown",
+    shortDescription: "Big shoes, red nose, big laughs.",
+    enabled: true,
+    thumbnail: "/examples/clown.jpg",
+    theme: { from: "#ff5f1f", to: "#ffd23f", ink: "#1f0b04" },
+  },
+  {
+    id: "christmas",
+    displayName: "Christmas",
+    shortDescription: "Cosy by the tree and the fireplace.",
+    enabled: true,
+    thumbnail: "/examples/christmas.jpg",
+    theme: { from: "#dc2626", to: "#22c55e", ink: "#1a0606" },
+  },
+  {
+    id: "halloween",
+    displayName: "Halloween",
+    shortDescription: "Spooky fun in the pumpkin patch.",
+    enabled: true,
+    thumbnail: "/examples/halloween.jpg",
+    theme: { from: "#f97316", to: "#7c3aed", ink: "#160a1f" },
+  },
+  {
+    id: "supercar",
+    displayName: "Supercar",
+    shortDescription: "Pose with an exotic sports car.",
+    enabled: true,
+    thumbnail: "/examples/supercar.jpg",
+    theme: { from: "#0ea5e9", to: "#f43f5e", ink: "#06121a" },
+  },
+  {
+    id: "astronaut",
+    displayName: "Astronaut",
+    shortDescription: "One small step... on the Moon!",
+    enabled: true,
+    thumbnail: "/examples/astronaut.jpg",
+    theme: { from: "#64748b", to: "#38bdf8", ink: "#0b1220" },
+  },
 ];
 
 export function getEnabledStyles(): PhotoStyle[] {
   return PHOTO_STYLES.filter((style) => style.enabled);
+}
+
+/** Styles the guest sees: enabled, minus the ones staff hid in the settings menu. */
+export function getVisibleStyles(hidden: readonly string[]): PhotoStyle[] {
+  const visible = getEnabledStyles().filter((style) => !hidden.includes(style.id));
+  return visible.length > 0 ? visible : getEnabledStyles();
 }
 
 export function getStyleById(id: string): PhotoStyle | undefined {

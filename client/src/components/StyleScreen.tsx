@@ -1,13 +1,18 @@
-import { getEnabledStyles, type PhotoStyle } from "../config/styles";
+import { getVisibleStyles, type PhotoStyle } from "../config/styles";
+
+/** The booth screen fits 8 cards (2 x 4); with more the grid scrolls. */
+const CARDS_PER_SCREEN = 8;
 
 interface StyleScreenProps {
   restyle: boolean;
+  hiddenStyles: readonly string[];
   onBack: () => void;
   onChoose: (style: PhotoStyle) => void;
 }
 
-export function StyleScreen({ restyle, onBack, onChoose }: StyleScreenProps) {
-  const styles = getEnabledStyles();
+export function StyleScreen({ restyle, hiddenStyles, onBack, onChoose }: StyleScreenProps) {
+  const styles = getVisibleStyles(hiddenStyles);
+  const scrolls = styles.length > CARDS_PER_SCREEN;
 
   return (
     <main className="screen style-screen">
@@ -21,7 +26,7 @@ export function StyleScreen({ restyle, onBack, onChoose }: StyleScreenProps) {
           {restyle ? <p className="header-note">Your original photo will be used again.</p> : null}
         </div>
       </header>
-      <div className="style-grid">
+      <div className={scrolls ? "style-grid scrolls" : "style-grid"}>
         {styles.map((style, index) => (
           <button
             key={style.id}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { fetchBoothMeta, fetchSettings, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
-import { playError, playSelect, playTada, playTap, playWhoosh, startMusic, stopMusic } from "./audio/sound";
+import { playError, playSelect, playTada, playTap, playWhoosh, setSoundTheme, startMusic, stopMusic } from "./audio/sound";
 import { CameraScreen } from "./components/CameraScreen";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { GeneratingScreen } from "./components/GeneratingScreen";
@@ -71,6 +71,17 @@ export function App() {
       controller.abort();
     };
   }, [state.screen]);
+
+  // Visual and sound theme from the staff settings. The settings menu previews themes the same way.
+  const visualTheme = settings?.settings.visualTheme ?? "carnival";
+  const soundTheme = settings?.settings.soundTheme ?? "carnival";
+  useEffect(() => {
+    document.documentElement.dataset.theme = visualTheme;
+  }, [visualTheme]);
+  useEffect(() => {
+    setSoundTheme(soundTheme);
+  }, [soundTheme]);
+  const hiddenStyles = settings?.settings.hiddenStyles ?? [];
 
   // Music plays for the whole session and fades out on the start screen; each step gets its own effect.
   const previousScreenRef = useRef(state.screen);
@@ -241,6 +252,7 @@ export function App() {
     case "start":
       screen = (
         <StartScreen
+          hiddenStyles={hiddenStyles}
           onStart={() => dispatch({ type: "begin" })}
           onOpenSettings={settings ? () => setSettingsOpen(true) : undefined}
         />
@@ -250,6 +262,7 @@ export function App() {
       screen = (
         <StyleScreen
           restyle={state.restyle}
+          hiddenStyles={hiddenStyles}
           onBack={() => dispatch({ type: "back" })}
           onChoose={(style) => dispatch({ type: "choose-style", styleId: style.id })}
         />
@@ -320,7 +333,16 @@ export function App() {
     <div className="booth">
       {screen}
       {settingsOpen && settings && state.screen === "start" ? (
-        <SettingsMenu current={settings} onSaved={setSettings} onClose={() => setSettingsOpen(false)} />
+        <SettingsMenu
+          current={settings}
+          onSaved={setSettings}
+          onClose={() => {
+            // Drop any theme preview that was not saved.
+            document.documentElement.dataset.theme = visualTheme;
+            setSoundTheme(soundTheme);
+            setSettingsOpen(false);
+          }}
+        />
       ) : null}
       {DEVELOPER_MODE ? (
         <DeveloperPanel

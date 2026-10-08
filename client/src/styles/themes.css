@@ -1,0 +1,277 @@
+/*
+ * Visual themes, picked in the staff menu (html[data-theme]).
+ * "carnival" is the base look in app.css; these override it for the guest screens only,
+ * so the staff menu keeps its own, always readable style.
+ */
+
+/* ---------- Neon Night: dark, glowing pink and cyan ---------- */
+html[data-theme="neon"] .booth {
+  --text: #f6f2ff;
+  --muted: #b9b0e0;
+  --pink: #ff2fb4;
+  --pink-deep: #b0127a;
+  --sky: #21e6ff;
+  --yellow: #21e6ff;
+  background:
+    radial-gradient(circle at 12% 22%, rgba(255, 47, 180, 0.35) 0 2px, transparent 3px) 0 0 / 90px 90px,
+    radial-gradient(circle at 70% 60%, rgba(33, 230, 255, 0.35) 0 2px, transparent 3px) 0 0 / 130px 130px,
+    radial-gradient(700px 500px at 0% 0%, rgba(255, 47, 180, 0.28), transparent 60%),
+    radial-gradient(700px 600px at 100% 100%, rgba(33, 230, 255, 0.22), transparent 60%),
+    #0d0a22;
+}
+
+html[data-theme="neon"] .booth::before {
+  height: 4px;
+  background: linear-gradient(90deg, #ff2fb4, #b347ff, #21e6ff);
+  box-shadow: 0 0 14px #ff2fb4, 0 0 28px rgba(33, 230, 255, 0.6);
+}
+
+html[data-theme="neon"] .screen h1 {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 47, 180, 0.9), 0 0 26px rgba(255, 47, 180, 0.6);
+}
+
+html[data-theme="neon"] .start-screen h1 span {
+  color: #21e6ff;
+  text-shadow: 0 0 10px rgba(33, 230, 255, 0.9), 0 0 30px rgba(33, 230, 255, 0.6);
+}
+
+html[data-theme="neon"] .screen .eyebrow {
+  background: transparent;
+  border: 2px solid #21e6ff;
+  color: #21e6ff;
+  box-shadow: 0 0 10px rgba(33, 230, 255, 0.6);
+}
+
+html[data-theme="neon"] .screen .button {
+  border-color: transparent;
+}
+
+html[data-theme="neon"] .screen .button-primary {
+  background: linear-gradient(180deg, #ff5ac8, #e0179a);
+  box-shadow: 0 0 0 2px #ff9be0, 0 0 22px rgba(255, 47, 180, 0.8);
+}
+
+html[data-theme="neon"] .screen .button-primary:active:not(:disabled) {
+  box-shadow: 0 0 0 2px #ff9be0, 0 0 10px rgba(255, 47, 180, 0.8);
+}
+
+html[data-theme="neon"] .screen .button-secondary {
+  background: rgba(13, 10, 34, 0.8);
+  color: #21e6ff;
+  border: 2px solid #21e6ff;
+  box-shadow: 0 0 14px rgba(33, 230, 255, 0.45);
+}
+
+html[data-theme="neon"] .screen .button-secondary:active:not(:disabled) {
+  box-shadow: 0 0 6px rgba(33, 230, 255, 0.45);
+}
+
+html[data-theme="neon"] .polaroid {
+  background: #1b1640;
+  box-shadow: 0 0 0 2px rgba(33, 230, 255, 0.6), 0 0 22px rgba(33, 230, 255, 0.35);
+}
+
+html[data-theme="neon"] .polaroid figcaption {
+  color: #fff;
+}
+
+html[data-theme="neon"] .style-card {
+  border-color: #1b1640;
+  box-shadow: 0 0 0 2px var(--from), 0 0 18px var(--from);
+}
+
+html[data-theme="neon"] .style-copy {
+  background: rgba(13, 10, 34, 0.88);
+}
+
+html[data-theme="neon"] .style-index {
+  border-color: #0d0a22;
+}
+
+html[data-theme="neon"] .screen .portrait-frame img,
+html[data-theme="neon"] .screen .video-shell {
+  border-color: #1b1640;
+  box-shadow: 0 0 0 2px #ff2fb4, 0 0 26px rgba(255, 47, 180, 0.55);
+}
+
+html[data-theme="neon"] .choice {
+  border-color: #1b1640;
+}
+
+html[data-theme="neon"] .progress {
+  border-color: #21e6ff;
+  background: #1b1640;
+  box-shadow: 0 0 12px rgba(33, 230, 255, 0.5);
+}
+
+html[data-theme="neon"] .settings-gear {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+html[data-theme="neon"] .camera-stage .camera-message {
+  background: rgba(13, 10, 34, 0.95);
+}
+
+/* ---------- Elegant: ivory, gold and a classic serif, for weddings and galas ---------- */
+html[data-theme="elegant"] .booth {
+  --text: #26201c;
+  --muted: #7a6c5d;
+  --pink: #b8935a;
+  --pink-deep: #8a6a3a;
+  --yellow: #d9c19a;
+  --gold-line: #b8935a;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(184, 147, 90, 0.16) 0 1.5px, transparent 2.5px) 0 0 / 34px 34px,
+    radial-gradient(800px 500px at 50% 0%, #fffaf0, transparent 70%),
+    #f4ede0;
+}
+
+html[data-theme="elegant"] .booth::before {
+  height: 10px;
+  background:
+    linear-gradient(var(--gold-line), var(--gold-line)) 0 0 / 100% 2px no-repeat,
+    linear-gradient(var(--gold-line), var(--gold-line)) 0 6px / 100% 1px no-repeat;
+  box-shadow: none;
+}
+
+html[data-theme="elegant"] .screen h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #26201c;
+  text-shadow: none;
+}
+
+html[data-theme="elegant"] .start-screen h1 {
+  line-height: 1.08;
+}
+
+html[data-theme="elegant"] .start-screen h1 span {
+  color: #b8935a;
+  font-style: italic;
+  font-weight: 600;
+  transform: none;
+}
+
+html[data-theme="elegant"] .screen .eyebrow {
+  background: transparent;
+  color: #9a7741;
+  border-top: 1px solid #b8935a;
+  border-bottom: 1px solid #b8935a;
+  border-radius: 0;
+  font-family: "Nunito", sans-serif;
+  letter-spacing: 0.24em;
+  transform: none;
+}
+
+html[data-theme="elegant"] .screen .lede,
+html[data-theme="elegant"] .screen .header-note {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+}
+
+html[data-theme="elegant"] .screen .button {
+  border-width: 2px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+html[data-theme="elegant"] .screen .action-row .button {
+  padding: 0 10px;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+html[data-theme="elegant"] .screen .button-primary {
+  background: #26201c;
+  border-color: #26201c;
+  color: #f4ede0;
+  box-shadow: inset 0 0 0 3px #26201c, inset 0 0 0 4px #b8935a, 0 6px 16px rgba(38, 32, 28, 0.25);
+}
+
+html[data-theme="elegant"] .screen .button-primary:active:not(:disabled) {
+  box-shadow: inset 0 0 0 3px #26201c, inset 0 0 0 4px #b8935a, 0 2px 6px rgba(38, 32, 28, 0.25);
+}
+
+html[data-theme="elegant"] .screen .button-secondary {
+  background: rgba(255, 252, 245, 0.9);
+  border-color: #b8935a;
+  color: #26201c;
+  box-shadow: 0 4px 12px rgba(38, 32, 28, 0.12);
+}
+
+html[data-theme="elegant"] .screen .button-secondary:active:not(:disabled) {
+  box-shadow: 0 1px 4px rgba(38, 32, 28, 0.12);
+}
+
+html[data-theme="elegant"] .start-button {
+  animation: none;
+}
+
+html[data-theme="elegant"] .polaroid {
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(184, 147, 90, 0.5), 0 10px 24px rgba(38, 32, 28, 0.18);
+}
+
+html[data-theme="elegant"] .polaroid figcaption {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  color: #26201c;
+}
+
+html[data-theme="elegant"] .style-card {
+  border: 3px solid #fffaf0;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #b8935a, 0 10px 22px rgba(38, 32, 28, 0.18);
+  transform: none;
+}
+
+html[data-theme="elegant"] .style-copy {
+  border-radius: 4px;
+  background: rgba(255, 252, 245, 0.94);
+}
+
+html[data-theme="elegant"] .style-name {
+  font-family: "Playfair Display", Georgia, serif;
+  color: #26201c;
+}
+
+html[data-theme="elegant"] .style-index {
+  background: #26201c;
+  border: 1px solid #b8935a;
+  color: #f4ede0;
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+html[data-theme="elegant"] .screen .portrait-frame img,
+html[data-theme="elegant"] .screen .video-shell {
+  border-color: #fffaf0;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #b8935a, 0 14px 30px rgba(38, 32, 28, 0.22);
+}
+
+html[data-theme="elegant"] .choice {
+  border-radius: 4px;
+}
+
+html[data-theme="elegant"] .progress {
+  border: 1px solid #b8935a;
+}
+
+html[data-theme="elegant"] .settings-gear {
+  color: rgba(38, 32, 28, 0.3);
+}
+
+/* The staff menu keeps the base colours in every theme. */
+html[data-theme] .settings-backdrop {
+  --pink-deep: #c81d72;
+  --text: #2d1b4e;
+  --muted: #6b5a86;
+  --pink: #ff3d9a;
+  --yellow: #ffc93c;
+  --sky: #2bb3ff;
+}

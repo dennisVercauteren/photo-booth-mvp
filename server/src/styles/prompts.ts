@@ -63,9 +63,8 @@ Keep every original person's face, hair and body shape clearly recognizable.
 
 If several people are present, all of them stay in the frame together.
 
-Compose the photograph for a 5 by 4 inch landscape print: five units wide and four units tall.
-Fill that frame edge to edge.
-Do not use a tall portrait crop.
+Compose the photograph for the requested print shape, filling that frame edge to edge.
+Keep every person fully in the frame.
 Do not leave empty borders above or beside the group.`;
 
 export const FACE_LOCK_PROMPT = `Identity lock. This overrides every costume instruction above.
@@ -348,3 +347,142 @@ Real materials.
 Cinematic atmosphere.
 Detailed face and skin.
 No text or logos.`;
+
+export const POP_BAND_PROMPT = `Turn the people into the members of a 1990s pop girl group on a big tour night.
+
+Replace everyone's everyday clothes completely with bold, coordinated late-1990s girl-group stage costumes: sparkly sequin or glitter tops, metallic or vinyl trousers and skirts, bright satin, faux-fur trims, platform trainers or platform boots, chunky silver jewellery.
+Do not keep plain t-shirts, jeans or everyday clothes. Everyone must look dressed up for a huge pop concert.
+Each person gets their own look so the group reads as a band of different characters, with one shared colour scheme.
+
+Present everyone as a member of the band through the clothes and the pose. Do not change anyone's face, gender or body to fit the theme.
+
+Place them on a concert stage with coloured spotlights, haze, light beams and a cheering crowd softly blurred in the background.
+
+The mood is joyful, loud and full of energy.
+
+Do not copy a real band or a real celebrity.
+Do not add band names, posters, microphones with logos, or any text.
+Do not sexualize the costumes.
+
+Photorealistic concert photograph.
+Vivid stage colour.
+Natural skin.
+Real fabrics.`;
+
+export const CAGE_FIGHTER_PROMPT = `Turn the people into professional mixed martial arts fighters at a big event, posing in the octagon before the fight.
+
+Dress them in clean fight gear: fight shorts or a rash guard in strong colours, open-finger fight gloves, hand wraps. A championship belt over the shoulder may be added for one person.
+The belt is plain gold and leather with an abstract engraved pattern: no letters, no words, no initials and no logo on it.
+Keep their own body shape. Do not add muscles, tattoos or a different physique.
+
+Place them inside the cage: black chain-link fence, the canvas floor, bright overhead arena lights and a dark crowd behind.
+
+The pose is a confident, friendly stare-down or a raised fist, as on a fight poster.
+
+Keep it sporty and fun.
+No blood, bruises, cuts or injuries.
+No real promotion names, sponsor logos or text on the canvas, clothes or belt.
+
+Photorealistic sports photograph.
+Hard arena light.
+Sharp detail.
+Natural skin.`;
+
+export const FOOTBALL_PROMPT = `Turn the people into professional football (soccer) players in a full stadium.
+
+Dress everyone in a modern football kit: a short-sleeved jersey in bold colours, shorts, socks and boots. Everyone in the photo wears the same team kit.
+Use an invented team look. No real club crest, no sponsor, no brand logo, no player name or number that belongs to a real player.
+
+Place them on the pitch of a big stadium under floodlights, with the stands full of a blurred crowd, a little confetti in the air, as if they just won the match.
+
+The pose is a celebration: arms up, a cheer, or holding a golden trophy without text.
+
+Keep their own body shape and their own hair.
+
+Photorealistic sports photograph.
+Floodlight rim light.
+Grass and fabric detail.
+Natural skin.
+No text.`;
+
+export const CLOWN_PROMPT = `Turn the people into cheerful circus clowns in a classic big top.
+
+Dress everyone in a colourful clown costume: big polka-dot or striped suits, a ruffled collar, oversized bow tie, suspenders, big shoes and a small hat that leaves the hair visible.
+A red clown nose is allowed. Face paint is limited to a little colour on the cheeks, so the face stays fully recognisable.
+
+Place them in the ring of a warm, old-fashioned circus tent, with red and white stripes, spotlights and a few balloons or juggling balls.
+
+The mood is friendly, silly and warm.
+
+Do not make it scary or creepy.
+Do not cover the face with white make-up or a mask.
+No text or posters.
+
+Photorealistic.
+Warm circus light.
+Rich costume detail.
+Natural skin.`;
+
+export const CHRISTMAS_PROMPT = `Turn the photo into a cosy Christmas portrait.
+
+Dress the people in festive clothing: Santa Claus suits, elf outfits, or warm Christmas jumpers, with a Santa hat that sits above their own hair.
+Do not add a fake white beard that covers the face.
+
+Place them in a warm living room on Christmas Eve: a decorated Christmas tree with fairy lights, a crackling fireplace with stockings, wrapped presents, and a little snow falling outside the window.
+
+The mood is warm, happy and magical.
+
+Photorealistic.
+Golden fairy-light glow.
+Soft depth of field.
+Natural skin.
+No text, cards or banners.`;
+
+export const HALLOWEEN_PROMPT = `Turn the people into playful Halloween characters, such as an elegant vampire, a witch or a wizard.
+
+Use rich, theatrical costumes: high collars, capes, velvet, a pointed hat that leaves the hair visible.
+Keep the faces as they are. At most a small hint of colour around the eyes. No masks, no heavy make-up, no fangs that change the mouth.
+
+Place them in a spooky but fun setting: a misty pumpkin patch at night with glowing jack-o'-lanterns, an old mansion behind, a full moon and a few bats.
+
+The mood is fun, not frightening. Suitable for children.
+No blood, gore or wounds.
+No text.
+
+Photorealistic.
+Moonlight and warm pumpkin glow.
+Cinematic atmosphere.
+Natural skin.`;
+
+export const SUPERCAR_PROMPT = `Turn the photo into a glamorous portrait of the people posing next to an exotic sports car.
+
+Dress them in stylish, expensive clothes: tailored jackets, sunglasses pushed up on the head or held in the hand, polished shoes.
+
+Place them beside a gleaming low supercar in a bold colour, with the doors open upwards, on a coastal road at golden hour or in front of a luxury hotel at night.
+The car must be an invented design. No real car brand, badge, emblem or number plate text.
+
+The people are the focus. The car fills the background and the side of the frame.
+
+The mood is confident, rich and fun.
+
+Photorealistic automotive lifestyle photograph.
+Golden-hour light and reflections on the paint.
+Natural skin.
+No text or logos.`;
+
+export const ASTRONAUT_PROMPT = `Turn the people into astronauts on a space mission.
+
+Dress them in realistic white spacesuits with mission patches without text, the helmet held under the arm or with an open visor, so the whole face and their own hair are visible.
+
+Place them on the surface of the Moon with the Earth rising in the black sky behind them, a lunar lander and footprints in the grey dust.
+Alternatively, inside a space station with a big window onto the Earth.
+
+The mood is proud and adventurous.
+
+Mission patches are plain coloured shapes: no flags of any country, no space agency logos, no letters, names or numbers anywhere on the suits.
+No text.
+
+Photorealistic.
+Hard sunlight and deep shadows, as in real space photography.
+Detailed suit fabric.
+Natural skin.`;

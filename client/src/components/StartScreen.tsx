@@ -1,14 +1,15 @@
 import { useRef } from "react";
-import { getEnabledStyles } from "../config/styles";
+import { getVisibleStyles } from "../config/styles";
 
 const SETTINGS_HOLD_MS = 2000;
 
 interface StartScreenProps {
+  hiddenStyles?: readonly string[];
   onStart: () => void;
   onOpenSettings?: () => void;
 }
 
-export function StartScreen({ onStart, onOpenSettings }: StartScreenProps) {
+export function StartScreen({ hiddenStyles = [], onStart, onOpenSettings }: StartScreenProps) {
   const holdTimer = useRef<number | null>(null);
 
   function startHold(): void {
@@ -26,7 +27,7 @@ export function StartScreen({ onStart, onOpenSettings }: StartScreenProps) {
     }
   }
 
-  const examples = getEnabledStyles().filter((style) => style.thumbnail).slice(0, 4);
+  const examples = getVisibleStyles(hiddenStyles).filter((style) => style.thumbnail).slice(0, 4);
 
   return (
     <main className="screen screen-center start-screen">

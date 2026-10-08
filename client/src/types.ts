@@ -41,7 +41,16 @@ export interface BoothSettings {
   imageCount: number;
   /** Colour correction for the NoIR camera (see camera/colorFix.ts). */
   colorFix: boolean;
+  /** Style ids hidden from the guest's style screen. */
+  hiddenStyles: string[];
+  visualTheme: VisualTheme;
+  soundTheme: SoundTheme;
 }
+
+export const VISUAL_THEMES = ["carnival", "neon", "elegant"] as const;
+export const SOUND_THEMES = ["carnival", "arcade", "lounge"] as const;
+export type VisualTheme = (typeof VISUAL_THEMES)[number];
+export type SoundTheme = (typeof SOUND_THEMES)[number];
 
 export interface BoothSettingsResponse {
   settings: BoothSettings;

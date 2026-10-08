@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { saveSettings } from "../api/client";
+import { fetchGallery, saveSettings } from "../api/client";
 import {
   connectWifi,
   fetchSpeakers,
@@ -11,8 +11,10 @@ import {
   type WifiNetwork,
   type WifiStatus,
 } from "../api/device";
-import { playTada } from "../audio/sound";
-import type { BoothSettingsResponse } from "../types";
+import { playTada, setSoundTheme } from "../audio/sound";
+import { getEnabledStyles } from "../config/styles";
+import type { BoothSettingsResponse, SoundTheme, VisualTheme } from "../types";
+import { DemoGallery } from "./DemoGallery";
 import { TouchKeyboard } from "./TouchKeyboard";
 
 interface SettingsMenuProps {
@@ -21,12 +23,30 @@ interface SettingsMenuProps {
   onClose: () => void;
 }
 
-type Tab = "photos" | "speaker" | "wifi";
+type Tab = "photos" | "styles" | "look" | "demo" | "speaker" | "wifi";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "photos", label: "Photos" },
+  { id: "styles", label: "Styles" },
+  { id: "look", label: "Look" },
+  { id: "demo", label: "Demo" },
   { id: "speaker", label: "Speaker" },
   { id: "wifi", label: "Wi-Fi" },
+];
+
+/** Tabs with their own Save and Cancel buttons; the others get a Close button. */
+const SAVE_TABS: readonly Tab[] = ["photos", "styles", "look"];
+
+const VISUAL_THEME_OPTIONS: { id: VisualTheme; label: string; hint: string; swatch: string[] }[] = [
+  { id: "carnival", label: "Carnival", hint: "Bright and playful", swatch: ["#ff3d9a", "#ffc93c", "#2bb3ff"] },
+  { id: "neon", label: "Neon Night", hint: "Dark with glowing colours", swatch: ["#120d2b", "#ff2fb4", "#21e6ff"] },
+  { id: "elegant", label: "Elegant", hint: "Ivory and gold, for weddings", swatch: ["#f7f2e8", "#b8935a", "#26201c"] },
+];
+
+const SOUND_THEME_OPTIONS: { id: SoundTheme; label: string; hint: string }[] = [
+  { id: "carnival", label: "Carnival", hint: "Bouncy fairground tune" },
+  { id: "arcade", label: "Arcade", hint: "8-bit game sounds" },
+  { id: "lounge", label: "Lounge", hint: "Soft and chic" },
 ];
 
 /** Operator menu. Opened by holding the gear on the start screen. */
@@ -54,10 +74,13 @@ export function SettingsMenu({ current, onSaved, onClose }: SettingsMenuProps) {
         </div>
         <div className="settings-panel">
           {tab === "photos" ? <PhotosPanel current={current} onSaved={onSaved} onClose={onClose} /> : null}
+          {tab === "styles" ? <StylesPanel current={current} onSaved={onSaved} onClose={onClose} /> : null}
+          {tab === "look" ? <LookPanel current={current} onSaved={onSaved} onClose={onClose} /> : null}
+          {tab === "demo" ? <DemoPanel /> : null}
           {tab === "speaker" ? <SpeakerPanel /> : null}
           {tab === "wifi" ? <WifiPanel /> : null}
         </div>
-        {tab !== "photos" ? (
+        {!SAVE_TABS.includes(tab) ? (
           <button type="button" className="button button-secondary settings-close" onClick={onClose}>
             Close
           </button>
@@ -133,6 +156,216 @@ function PhotosPanel({ current, onSaved, onClose }: SettingsMenuProps) {
           Cancel
         </button>
       </div>
+    </>
+  );
+}
+
+function StylesPanel({ current, onSaved, onClose }: SettingsMenuProps) {
+  const styles = getEnabledStyles();
+  const [hidden, setHidden] = useState<string[]>(current.settings.hiddenStyles);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const visibleCount = styles.filter((style) => !hidden.includes(style.id)).length;
+
+  function toggle(id: string): void {
+    if (hidden.includes(id)) {
+      setHidden(hidden.filter((item) => item !== id));
+    } else if (visibleCount > 1) {
+      setHidden([...hidden, id]);
+    }
+  }
+
+  async function save(): Promise<void> {
+    setSaving(true);
+    setError(null);
+    try {
+      onSaved(await saveSettings({ hiddenStyles: hidden }));
+      onClose();
+    } catch (saveError) {
+      setError(errorText(saveError, "Could not save the styles."));
+      setSaving(false);
+    }
+  }
+
+  return (
+    <>
+      <div className="settings-field">
+        <p className="settings-label">Styles on the booth ({visibleCount} of {styles.length})</p>
+        <p className="settings-hint">Tap to show or hide. Up to 8 fit on one screen; with more, guests scroll.</p>
+        <div className="settings-style-list">
+          {styles.map((style) => {
+            const shown = !hidden.includes(style.id);
+            return (
+              <button
+                key={style.id}
+                type="button"
+                role="switch"
+                aria-checked={shown}
+                className={shown ? "settings-style shown" : "settings-style"}
+                onClick={() => toggle(style.id)}
+              >
+                {style.thumbnail ? <img src={style.thumbnail} alt="" /> : <span className="settings-style-blank" />}
+                <span className="settings-style-name">{style.displayName}</span>
+                <span className="settings-style-state">{shown ? "On" : "Off"}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="settings-inline-actions">
+          <button type="button" className="settings-small" onClick={() => setHidden([])}>
+            Show all
+          </button>
+        </div>
+      </div>
+      {error ? <p className="inline-error">{error}</p> : null}
+      <div className="action-row two">
+        <button type="button" className="button button-primary" onClick={() => void save()} disabled={saving}>
+          {saving ? "Saving..." : "Save"}
+        </button>
+        <button type="button" className="button button-secondary" onClick={onClose} disabled={saving}>
+          Cancel
+        </button>
+      </div>
+    </>
+  );
+}
+
+function LookPanel({ current, onSaved, onClose }: SettingsMenuProps) {
+  const [visualTheme, setVisualTheme] = useState(current.settings.visualTheme);
+  const [soundTheme, setSoundThemeChoice] = useState(current.settings.soundTheme);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Preview straight away; the menu puts the saved theme back when it closes without saving.
+  function chooseVisual(theme: VisualTheme): void {
+    setVisualTheme(theme);
+    document.documentElement.dataset.theme = theme;
+  }
+
+  function chooseSound(theme: SoundTheme): void {
+    setSoundThemeChoice(theme);
+    setSoundTheme(theme);
+    playTada();
+  }
+
+  async function save(): Promise<void> {
+    setSaving(true);
+    setError(null);
+    try {
+      onSaved(await saveSettings({ visualTheme, soundTheme }));
+      onClose();
+    } catch (saveError) {
+      setError(errorText(saveError, "Could not save the look."));
+      setSaving(false);
+    }
+  }
+
+  return (
+    <>
+      <div className="settings-field">
+        <p className="settings-label">Screen style</p>
+        <p className="settings-hint">The booth changes behind this menu so you can see it.</p>
+        <div className="settings-theme-list" role="radiogroup" aria-label="Screen style">
+          {VISUAL_THEME_OPTIONS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={option.id === visualTheme}
+              className={option.id === visualTheme ? "settings-theme selected" : "settings-theme"}
+              onClick={() => chooseVisual(option.id)}
+            >
+              <span className="settings-swatch" aria-hidden="true">
+                {option.swatch.map((colour) => (
+                  <span key={colour} style={{ background: colour }} />
+                ))}
+              </span>
+              <span className="settings-theme-text">
+                {option.label}
+                <small>{option.hint}</small>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="settings-field">
+        <p className="settings-label">Sounds and music</p>
+        <p className="settings-hint">Tap to hear it. Music starts when a guest taps Let's go.</p>
+        <div className="settings-theme-list" role="radiogroup" aria-label="Sounds and music">
+          {SOUND_THEME_OPTIONS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              role="radio"
+              aria-checked={option.id === soundTheme}
+              className={option.id === soundTheme ? "settings-theme selected" : "settings-theme"}
+              onClick={() => chooseSound(option.id)}
+            >
+              <span className="settings-theme-icon" aria-hidden="true">♪</span>
+              <span className="settings-theme-text">
+                {option.label}
+                <small>{option.hint}</small>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+      {error ? <p className="inline-error">{error}</p> : null}
+      <div className="action-row two">
+        <button type="button" className="button button-primary" onClick={() => void save()} disabled={saving}>
+          {saving ? "Saving..." : "Save"}
+        </button>
+        <button type="button" className="button button-secondary" onClick={onClose} disabled={saving}>
+          Cancel
+        </button>
+      </div>
+    </>
+  );
+}
+
+function DemoPanel() {
+  const [pictures, setPictures] = useState<string[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [showing, setShowing] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchGallery(controller.signal)
+      .then(setPictures)
+      .catch((loadError: unknown) => {
+        if (!controller.signal.aborted) {
+          setError(errorText(loadError, "Could not load the demo pictures."));
+        }
+      });
+    return () => controller.abort();
+  }, []);
+
+  return (
+    <>
+      <div className="settings-field">
+        <p className="settings-label">Sales demo</p>
+        <p className="settings-hint">A full-screen slideshow of example pictures to show customers. Swipe or tap the sides to browse.</p>
+        {pictures && pictures.length === 0 ? (
+          <p className="settings-empty">No demo pictures yet. They go in /opt/photobooth/shared/gallery.</p>
+        ) : null}
+        {pictures && pictures.length > 0 ? (
+          <div className="settings-demo-strip">
+            {pictures.slice(0, 6).map((url) => (
+              <img key={url} src={url} alt="" />
+            ))}
+          </div>
+        ) : null}
+        <button
+          type="button"
+          className="button button-primary settings-wide"
+          disabled={!pictures || pictures.length === 0}
+          onClick={() => setShowing(true)}
+        >
+          {pictures ? `Start demo (${pictures.length})` : "Loading..."}
+        </button>
+      </div>
+      {error ? <p className="inline-error">{error}</p> : null}
+      {showing && pictures ? <DemoGallery pictures={pictures} onClose={() => setShowing(false)} /> : null}
     </>
   );
 }

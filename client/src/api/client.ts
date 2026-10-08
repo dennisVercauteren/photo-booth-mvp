@@ -1,4 +1,5 @@
 import { API_BASE } from "../config/developer";
+import { SOUND_THEMES, VISUAL_THEMES } from "../types";
 import type { BoothMeta, BoothSettings, BoothSettingsResponse, GeneratedPhoto, GenerateMetadata } from "../types";
 
 export class GenerateClientError extends Error {
@@ -234,7 +235,7 @@ export async function fetchSettings(signal?: AbortSignal): Promise<BoothSettings
   return readSettingsResponse(response);
 }
 
-export async function saveSettings(settings: BoothSettings): Promise<BoothSettingsResponse> {
+export async function saveSettings(settings: Partial<BoothSettings>): Promise<BoothSettingsResponse> {
   const response = await fetch(`${API_BASE}/api/settings`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -257,12 +258,31 @@ async function readSettingsResponse(response: Response): Promise<BoothSettingsRe
   ) {
     throw new Error("Settings were malformed.");
   }
+  const raw = body.settings;
   return {
     // A server without the colour fix setting leaves it on.
     settings: {
       imageCount: body.settings.imageCount,
       colorFix: typeof body.settings.colorFix === "boolean" ? body.settings.colorFix : true,
+      hiddenStyles: Array.isArray(body.settings.hiddenStyles)
+        ? body.settings.hiddenStyles.filter((id): id is string => typeof id === "string")
+        : [],
+      visualTheme: VISUAL_THEMES.find((theme) => theme === raw.visualTheme) ?? "carnival",
+      soundTheme: SOUND_THEMES.find((theme) => theme === raw.soundTheme) ?? "carnival",
     },
     limits: { maxImageCount: body.limits.maxImageCount },
   };
+}
+
+/** Sales demo pictures from the booth's gallery folder. */
+export async function fetchGallery(signal?: AbortSignal): Promise<string[]> {
+  const response = await fetch(`${API_BASE}/api/gallery`, { signal });
+  if (!response.ok) {
+    throw new Error(`Gallery request failed (${response.status}).`);
+  }
+  const body: unknown = await response.json();
+  if (!isRecord(body) || !Array.isArray(body.pictures)) {
+    throw new Error("Gallery list was malformed.");
+  }
+  return body.pictures.filter((url): url is string => typeof url === "string").map((url) => `${API_BASE}${url}`);
 }

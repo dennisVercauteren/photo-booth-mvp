@@ -95,6 +95,9 @@ export const paths = {
   settingsFile: path.resolve(serverRoot, readString("BOOTH_SETTINGS_FILE", "settings.json")),
 };
 
+/** Sales demo pictures, shown from the staff menu. Defaults to a "gallery" folder next to the settings file. */
+export const galleryDir = path.resolve(serverRoot, readString("BOOTH_GALLERY_DIR", path.join(path.dirname(paths.settingsFile), "gallery")));
+
 const imageSize = readChoice("GEMINI_IMAGE_SIZE", "1K", IMAGE_SIZES);
 const requestedPreviewSize = readChoice("GEMINI_PREVIEW_SIZE", "1K", IMAGE_SIZES);
 

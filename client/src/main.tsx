@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./styles/app.css";
+import "./styles/themes.css";
 
 function Root() {
   const [sessionKey, setSessionKey] = useState(0);

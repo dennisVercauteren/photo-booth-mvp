@@ -11,7 +11,7 @@ const designSources = [
 ];
 // Use built assets after a production build, and source assets during development.
 function designFolder(): string {
-  const [built, source] = designSources;
+  const source = designSources[1];
   // In development pick the source folder so newly committed images show immediately,
   // even if an older dist/ folder exists from a previous build.
   if (process.env.NODE_ENV !== "production" && fs.existsSync(source)) return source;

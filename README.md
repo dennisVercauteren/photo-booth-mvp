@@ -287,3 +287,9 @@ The operator's **Staff → Demo** tab has two independent collections:
 The server lists both under `GET /api/gallery` as `pictures` and `boothDesigns`, and serves the files under `/api/gallery/photos/` and `/api/gallery/booth-designs/`. The /api route ensures previews work through the development proxy as well as the production kiosk process. The old /gallery path remains available for compatibility.
 
 To add more booth renderings, commit the new picture to `client/public/booth-designs/`, deploy the release (including a fresh client build), and reopen **Staff → Demo → Physical booths**. Files are sorted by name; no code change is needed.
+
+## Rotating attract screen and creative variants
+
+The guest homepage cycles through all **enabled, visible** character thumbnails every 6.5 seconds. Only one fills the screen at a time; the style label and cycle count provide a reason to linger. Disabling a style in Staff → Styles removes it from this loop as well as the selection grid. Reduced-motion mode disables the background pan.
+
+The three Gemini directions are Cinematic, Editorial, and Wild Card. The last direction now appends a unique imaginative scene for each character; all retain the same identity and group constraints. Creativity is intentionally prompt-driven rather than guaranteed. Validate the result with your paid Gemini key, including pairs and larger groups.

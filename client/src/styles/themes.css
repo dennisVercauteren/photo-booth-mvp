@@ -468,6 +468,8 @@ html[data-theme="machine"] .result-screen .action-row .button {
   min-height: 70px; font-size: clamp(.8rem,1.2vw,1.15rem); padding: 8px;
 }
 html[data-theme="machine"] .settings-gear { color: #fff; }
+/* Preserve the operator long-press target: the start-scene stacking rule must not move it. */
+html[data-theme="machine"] .start-screen > .settings-gear { position: fixed; z-index: 20; }
 html[data-theme="machine"] .camera-stage .camera-message { background: rgba(13,11,35,.96); }
 @keyframes machineSpin { to { transform: rotate(360deg); } }
 @keyframes machineScan { to { top: 93%; } }

@@ -240,3 +240,39 @@ Success:
 `mimeType` is the type Gemini actually returned. `variant` is 1, 2, or 3.
 
 Download names look like `photobooth-drag-queen-2-2026-10-05-123456.png`. The number is the chosen portrait.
+
+## Transformation Machine experience (2026-10)
+
+A theatrical, touch-first look is available in **Staff → Look**. It is the default for
+fresh installations. Existing booths retain saved Carnival / Neon / Elegant settings until
+you explicitly change them; the older looks and soundtracks are still supported.
+
+- **Visuals:** a portal-inspired attract screen, scan-line camera, rotating generation
+  effects, dramatic (but short) result reveal, and reduced-motion fallbacks.
+- **Audio:** a new `machine` sound theme with event-driven synth cues, per-style stings,
+  countdown impacts and a result fanfare. Playback requires an initial guest interaction,
+  as browsers do not permit unattended audio.
+- **Portraits:** the three server-side variations are now Cinematic, Editorial and Wild
+  Card. All still use the original camera photo; identity and group preservation remain
+  higher priority than artistic direction. The number of variations is still configurable.
+- **Collector card:** the result screen has a second download option that composites
+  the chosen image with a graphic frame and typography **locally** on the booth. The
+  existing Download action exports the unaltered generated portrait.
+- **Waiting:** messages cycle theatrically; they **do not** represent real Gemini progress.
+  There is intentionally no fabricated time estimate or percentage.
+
+### Operator smoke test
+
+1. Open Staff → Look; select the Transformation Machine visual AND sound themes, then Save.
+2. Start a session. Select Viking, then repeat with K-pop or Astronaut; listen for
+   different style stings and check camera capture / the countdown.
+3. Confirm the photograph, watch the looping waiting screen and ensure it stops on errors
+   and when the response arrives. Retry an error without restarting the kiosk.
+4. Generate three images and confirm the different compositions and readable choice names.
+5. Verify both **Download** (original image) and **Save Collector Card** (composited PNG).
+   Include a group photo and check that faces at the edges remain visible.
+6. Test touch input, 720p/small displays, slow generation, audio volume, Raspberry Pi
+   performance, and `prefers-reduced-motion` before a public deployment.
+
+GitHub Actions runs `npm ci`, `npm run typecheck`, and `npm run build` on every PR.
+A real image-generation smoke test still requires your billed Gemini key and camera.

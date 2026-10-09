@@ -2,6 +2,9 @@ import { RESULT_ACTIONS, ResultAction } from "../config/flow";
 import { DEVELOPER_MODE } from "../config/developer";
 import { downloadDataUrl } from "../lib/download";
 import { formatDuration } from "../lib/format";
+import { downloadCollectorCard } from "../lib/collectorCard";
+import { getStyleById } from "../config/styles";
+import { useState } from "react";
 import type { GeneratedPhoto } from "../types";
 
 interface ResultScreenProps {
@@ -23,6 +26,18 @@ export function ResultScreen({
   onRetake,
   onNewSession,
 }: ResultScreenProps) {
+  const [posterError, setPosterError] = useState<string | null>(null);
+
+  async function saveCard(): Promise<void> {
+    setPosterError(null);
+    try {
+      await downloadCollectorCard(selected.dataUrl, getStyleById(selected.metadata.styleId)?.displayName ?? "Alter Ego", selected.metadata.variant);
+    } catch (error) {
+      console.error("[collector-card]", error);
+      setPosterError("Could not save the collector card. You can still download the portrait.");
+    }
+  }
+
   function runAction(action: (typeof RESULT_ACTIONS)[number]["id"]): void {
     switch (action) {
       case ResultAction.Restyle:
@@ -48,8 +63,8 @@ export function ResultScreen({
     <main className="screen result-screen">
       <header className="screen-header compact-header">
         <div>
-          <p className="eyebrow">Ta-da!</p>
-          <h1>{options.length > 1 ? "Pick your favourite!" : "Your portrait"}</h1>
+          <p className="eyebrow">Transformation complete</p>
+          <h1>{options.length > 1 ? "Choose your new reality" : "Meet your alter ego"}</h1>
           {DEVELOPER_MODE ? (
             <p className="dev-timing">Portrait {selected.metadata.variant}: {formatDuration(selected.metadata.durationMs)}</p>
           ) : null}
@@ -73,14 +88,15 @@ export function ResultScreen({
                   onClick={() => onSelect(index)}
                 >
                   <img src={option.dataUrl} alt="" />
-                  <span>{option.metadata.variant}</span>
+                  <span>{["Cinematic", "Editorial", "Wild Card"][option.metadata.variant - 1] ?? `Option ${option.metadata.variant}`}</span>
                 </button>
               );
             })}
           </div>
         ) : null}
       </div>
-      <footer className="action-row">
+      <footer className="result-footer">
+        <div className="action-row result-actions">
         {RESULT_ACTIONS.map((action) => (
           <button
             key={action.id}
@@ -91,6 +107,9 @@ export function ResultScreen({
             {action.label}
           </button>
         ))}
+        <button type="button" className="button button-secondary" onClick={() => void saveCard()}>Save Collector Card</button>
+        </div>
+        {posterError ? <p className="inline-error" role="alert">{posterError}</p> : null}
       </footer>
     </main>
   );

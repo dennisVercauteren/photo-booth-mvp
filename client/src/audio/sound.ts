@@ -76,7 +76,7 @@ function noise(out: AudioNode, start: number, length: number, gain: number, filt
   source.start(start);
 }
 
-let theme: SoundTheme = "carnival";
+let theme: SoundTheme = "machine";
 
 /** Switches effects and music to another theme. Music that is playing restarts in the new style. */
 export function setSoundTheme(next: SoundTheme): void {
@@ -92,7 +92,9 @@ export function playTap(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    tone(a.effects, 980, t, 0.07, { type: "sine", gain: 0.45, slideTo: 1568 });
+  } else if (theme === "arcade") {
     tone(a.effects, 880, t, 0.05, { type: "square", gain: 0.25 });
   } else if (theme === "lounge") {
     tone(a.effects, 1320, t, 0.12, { type: "sine", gain: 0.25 });
@@ -105,7 +107,9 @@ export function playSelect(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    [440, 660, 880].forEach((f, i) => tone(a.effects, f, t + i * .065, .2, { type: "sine", gain: .35 }));
+  } else if (theme === "arcade") {
     [523, 659, 784, 1046, 1318].forEach((f, i) => tone(a.effects, f, t + i * 0.04, 0.06, { type: "square", gain: 0.22 }));
   } else if (theme === "lounge") {
     [587, 740, 880, 1109].forEach((f, i) => tone(a.effects, f, t + i * 0.09, 0.9, { type: "sine", gain: 0.3 }));
@@ -114,11 +118,52 @@ export function playSelect(): void {
   }
 }
 
+
+/** A short, character-flavoured sting after the guest selects a reality.
+ * Procedural sound only: no external downloads and nothing autoplays before a tap.
+ */
+export function playStyleCue(styleId: string): void {
+  if (theme !== "machine") { playSelect(); return; }
+  const a = audio();
+  if (!a) return;
+  const t = a.ctx.currentTime;
+  const signatures: Record<string, number[]> = {
+    viking: [110, 165, 220],
+    pirate: [196, 294, 392],
+    "k-pop": [659, 831, 988, 1318],
+    "pop-band": [587, 740, 880, 1175],
+    "drag-queen": [523, 659, 784, 1046],
+    astronaut: [262, 392, 523, 784],
+    "dark-fantasy": [130, 155, 196],
+    "gangster-1920": [294, 370, 440],
+    royal: [392, 494, 587, 784],
+    sumo: [131, 196, 262],
+    "cage-fighter": [147, 185, 220],
+    football: [349, 440, 523],
+    supercar: [220, 440, 660],
+    clown: [392, 523, 659, 784],
+    christmas: [523, 659, 784, 1046],
+    halloween: [196, 247, 294],
+  };
+  const notes = signatures[styleId] ?? [392, 494, 587];
+  const heavy = ["viking", "pirate", "dark-fantasy", "sumo", "cage-fighter", "halloween"].includes(styleId);
+  if (heavy) {
+    tone(a.effects, 65, t, .48, { type: "sine", gain: .8, slideTo: 48 });
+    noise(a.effects, t, .24, .22, 1200, 180);
+  }
+  notes.forEach((f, i) => tone(a.effects, f, t + i * .11, heavy ? .48 : .37, {
+    type: heavy ? "sawtooth" : "triangle", gain: heavy ? .2 : .38,
+  }));
+}
+
 export function playCountdown(final: boolean): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    tone(a.effects, final ? 660 : 330, t, final ? .45 : .17, { type: "sawtooth", gain: .22, slideTo: final ? 990 : 220 });
+    tone(a.effects, 82, t, .28, { type: "sine", gain: .55 });
+  } else if (theme === "arcade") {
     tone(a.effects, final ? 880 : 440, t, final ? 0.4 : 0.12, { type: "square", gain: 0.25 });
   } else if (theme === "lounge") {
     tone(a.effects, final ? 1175 : 880, t, final ? 0.9 : 0.5, { type: "sine", gain: 0.35 });
@@ -131,7 +176,11 @@ export function playShutter(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    noise(a.effects, t, .2, .45, 7000, 400);
+    tone(a.effects, 80, t, .55, { type: "sine", gain: .75, slideTo: 45 });
+    tone(a.effects, 1200, t + .08, .18, { type: "sawtooth", gain: .14, slideTo: 250 });
+  } else if (theme === "arcade") {
     noise(a.effects, t, 0.08, 0.8, 6000, 800);
     tone(a.effects, 1600, t, 0.15, { type: "square", gain: 0.2, slideTo: 200 });
   } else if (theme === "lounge") {
@@ -147,7 +196,11 @@ export function playWhoosh(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    noise(a.effects, t, 1.3, .2, 260, 6500);
+    tone(a.effects, 110, t, 1.3, { type: "sawtooth", gain: .28, slideTo: 660, attack: .13 });
+    tone(a.effects, 55, t, 1.4, { type: "sine", gain: .45, slideTo: 110, attack: .12 });
+  } else if (theme === "arcade") {
     [262, 330, 392, 523, 659, 784, 1046].forEach((f, i) => tone(a.effects, f, t + i * 0.07, 0.07, { type: "square", gain: 0.18 }));
   } else if (theme === "lounge") {
     noise(a.effects, t, 1.2, 0.25, 400, 1600);
@@ -162,7 +215,12 @@ export function playTada(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    noise(a.effects, t, .4, .65, 5500, 300);
+    tone(a.effects, 60, t, .9, { type: "sine", gain: 1, slideTo: 45 });
+    [392, 494, 587, 784, 988].forEach((f, i) => tone(a.effects, f, t + .12 + i * .09, .7, { type: "triangle", gain: .45 }));
+    [392, 494, 587].forEach((f) => tone(a.effects, f, t + .75, 1.1, { type: "sine", gain: .24 }));
+  } else if (theme === "arcade") {
     // Level-complete jingle.
     [[523, 0], [659, 0.1], [784, 0.2], [1046, 0.3], [784, 0.45], [1046, 0.55]].forEach(([f, at]) =>
       tone(a.effects, f, t + at, 0.1, { type: "square", gain: 0.22 }),
@@ -183,7 +241,9 @@ export function playError(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
-  if (theme === "arcade") {
+  if (theme === "machine") {
+    [440, 349, 262].forEach((f, i) => tone(a.effects, f, t + i * .17, .27, { type: "sawtooth", gain: .18, slideTo: f * .85 }));
+  } else if (theme === "arcade") {
     [494, 466, 440, 415].forEach((f, i) => tone(a.effects, f, t + i * 0.18, 0.16, { type: "square", gain: 0.22 }));
     tone(a.effects, 392, t + 0.75, 0.6, { type: "square", gain: 0.22, slideTo: 196 });
   } else if (theme === "lounge") {
@@ -207,6 +267,22 @@ interface Song {
 }
 
 const SONGS: Record<SoundTheme, Song> = {
+  machine: {
+    bpm: 108,
+    bars: [
+      [45, [0, 0, 72, 0, 0, 76, 0, 79]],
+      [41, [0, 0, 69, 0, 0, 72, 0, 76]],
+      [43, [0, 0, 71, 0, 0, 74, 0, 79]],
+      [40, [0, 0, 67, 0, 0, 71, 0, 74]],
+    ],
+    play(out, time, step, root, beat, note) {
+      if (beat === 0 || beat === 4) {
+        tone(out, midi(root - 12), time, step * 2.2, { type: "sine", gain: .65 });
+      }
+      if (beat % 2 === 1) noise(out, time, .04, .13, 6700, 3700);
+      if (note) tone(out, midi(note), time, step * 1.4, { type: "sine", gain: .19, attack: .025 });
+    },
+  },
   // A bouncy oom-pah carnival tune.
   carnival: {
     bpm: 132,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { fetchBoothMeta, fetchSettings, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
-import { playError, playSelect, playTada, playTap, playWhoosh, setSoundTheme, startMusic, stopMusic } from "./audio/sound";
+import { playError, playStyleCue, playTada, playTap, playWhoosh, setSoundTheme, startMusic, stopMusic } from "./audio/sound";
 import { CameraScreen } from "./components/CameraScreen";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { GeneratingScreen } from "./components/GeneratingScreen";
@@ -73,8 +73,8 @@ export function App() {
   }, [state.screen]);
 
   // Visual and sound theme from the staff settings. The settings menu previews themes the same way.
-  const visualTheme = settings?.settings.visualTheme ?? "carnival";
-  const soundTheme = settings?.settings.soundTheme ?? "carnival";
+  const visualTheme = settings?.settings.visualTheme ?? "machine";
+  const soundTheme = settings?.settings.soundTheme ?? "machine";
   useEffect(() => {
     document.documentElement.dataset.theme = visualTheme;
   }, [visualTheme]);
@@ -96,9 +96,7 @@ export function App() {
     if (previous === state.screen) {
       return;
     }
-    if (state.screen === "camera" && previous === "style") {
-      playSelect();
-    } else if (state.screen === "generating") {
+    if (state.screen === "generating") {
       playWhoosh();
     } else if (state.screen === "result") {
       playTada();
@@ -264,7 +262,10 @@ export function App() {
           restyle={state.restyle}
           hiddenStyles={hiddenStyles}
           onBack={() => dispatch({ type: "back" })}
-          onChoose={(style) => dispatch({ type: "choose-style", styleId: style.id })}
+          onChoose={(style) => {
+            playStyleCue(style.id);
+            dispatch({ type: "choose-style", styleId: style.id });
+          }}
         />
       );
       break;

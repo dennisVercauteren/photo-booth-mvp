@@ -153,7 +153,7 @@ export function CameraScreen({
         </button>
         <div>
           <p className="eyebrow">{style?.displayName ?? "Camera"}</p>
-          <h1>Step into frame</h1>
+          <h1>Step into the scanner</h1>
         </div>
       </header>
 
@@ -169,6 +169,7 @@ export function CameraScreen({
           />
           <canvas ref={fixCanvasRef} className={fixActive ? "live-preview fixed-preview" : "hidden-input"} aria-hidden="true" />
           {status === "live" && !issue ? <FramingGuide /> : null}
+          {status === "live" && !issue ? <p className="machine-camera-status" aria-hidden="true"><span /> SUBJECT DETECTED — READY TO TRANSFORM</p> : null}
           {status !== "live" && !issue ? <p className="camera-waiting">Starting camera...</p> : null}
         </div>
         {issue ? (
@@ -191,7 +192,7 @@ export function CameraScreen({
           }}
           disabled={status !== "live" || count !== null}
         >
-          Take Photo
+          Activate camera
         </button>
         {DEVELOPER_MODE ? (
           <>

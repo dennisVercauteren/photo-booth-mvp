@@ -8,7 +8,10 @@
     "dev:server": "npm run dev -w photobooth-server",
     "dev:client": "npm run dev -w photobooth-client",
     "typecheck": "npm run typecheck -w photobooth-server && npm run typecheck -w photobooth-client",
-    "build": "npm run build -w photobooth-server && npm run build -w photobooth-client"
+    "build": "npm run build -w photobooth-server && npm run build -w photobooth-client",
+    "predev": "node scripts/generate-samples.mjs",
+    "prebuild": "node scripts/generate-samples.mjs",
+    "test": "node scripts/generate-samples.mjs && node --import tsx --test server/test/*.test.ts"
   },
   "devDependencies": {
     "concurrently": "^10.0.5"

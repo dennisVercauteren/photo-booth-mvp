@@ -274,15 +274,26 @@ async function readSettingsResponse(response: Response): Promise<BoothSettingsRe
   };
 }
 
-/** Sales demo pictures from the booth's gallery folder. */
-export async function fetchGallery(signal?: AbortSignal): Promise<string[]> {
+export interface DemoCollections {
+  portraits: string[];
+  boothDesigns: string[];
+}
+
+/** Source photo examples are kept in a persistent folder, booth designs ship via GitHub. */
+export async function fetchGallery(signal?: AbortSignal): Promise<DemoCollections> {
   const response = await fetch(`${API_BASE}/api/gallery`, { signal });
-  if (!response.ok) {
-    throw new Error(`Gallery request failed (${response.status}).`);
-  }
+  if (!response.ok) throw new Error(`Gallery request failed (${response.status}).`);
   const body: unknown = await response.json();
-  if (!isRecord(body) || !Array.isArray(body.pictures)) {
-    throw new Error("Gallery list was malformed.");
+  if (!isRecord(body) || !Array.isArray(body.pictures)) throw new Error("Gallery list was malformed.");
+
+  function pictureUrls(input: unknown): string[] {
+    return Array.isArray(input)
+      ? input.filter((url): url is string => typeof url === "string" && url.startsWith("/") && !url.startsWith("//"))
+        .map((url) => `${API_BASE}${url}`)
+      : [];
   }
-  return body.pictures.filter((url): url is string => typeof url === "string").map((url) => `${API_BASE}${url}`);
+  return {
+    portraits: pictureUrls(body.pictures),
+    boothDesigns: pictureUrls(body.boothDesigns),
+  };
 }

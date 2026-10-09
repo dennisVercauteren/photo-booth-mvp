@@ -5,6 +5,7 @@ import { formatDuration } from "../lib/format";
 import { downloadCollectorCard } from "../lib/collectorCard";
 import { getStyleById } from "../config/styles";
 import { useState } from "react";
+import { RevealOverlay } from "./RevealOverlay";
 import type { GeneratedPhoto } from "../types";
 
 interface ResultScreenProps {
@@ -61,6 +62,7 @@ export function ResultScreen({
 
   return (
     <main className="screen result-screen">
+      <RevealOverlay imageUrl={options[0]?.dataUrl ?? selected.dataUrl} />
       <header className="screen-header compact-header">
         <div>
           <p className="eyebrow">Transformation complete</p>

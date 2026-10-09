@@ -1,7 +1,8 @@
 // Sound effects and background music, synthesised with Web Audio so the booth needs no audio files.
-// Three themes (carnival, arcade, lounge) share the same events; staff pick one in the settings menu.
+// Staff select one of four themes; the machine combines synth + optional WAV samples.
 
 import type { SoundTheme } from "../types";
+import { playSoundSample, warmSoundSamples } from "./samplePlayer";
 
 const MUSIC_VOLUME = 0.1;
 const EFFECTS_VOLUME = 0.35;
@@ -23,6 +24,7 @@ function audio(): { ctx: AudioContext; effects: GainNode; music: GainNode } | nu
     musicBus = context.createGain();
     musicBus.gain.value = 0;
     musicBus.connect(context.destination);
+    warmSoundSamples(context);
   }
   if (context.state === "suspended") {
     void context.resume();
@@ -127,6 +129,7 @@ export function playStyleCue(styleId: string): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
+  playSoundSample(a.ctx, a.effects, "select", 0.38);
   const signatures: Record<string, number[]> = {
     viking: [110, 165, 220],
     pirate: [196, 294, 392],
@@ -177,6 +180,7 @@ export function playShutter(): void {
   if (!a) return;
   const t = a.ctx.currentTime;
   if (theme === "machine") {
+    playSoundSample(a.ctx, a.effects, "camera", 0.48);
     noise(a.effects, t, .2, .45, 7000, 400);
     tone(a.effects, 80, t, .55, { type: "sine", gain: .75, slideTo: 45 });
     tone(a.effects, 1200, t + .08, .18, { type: "sawtooth", gain: .14, slideTo: 250 });
@@ -197,6 +201,7 @@ export function playWhoosh(): void {
   if (!a) return;
   const t = a.ctx.currentTime;
   if (theme === "machine") {
+    playSoundSample(a.ctx, a.effects, "transition", 0.32);
     noise(a.effects, t, 1.3, .2, 260, 6500);
     tone(a.effects, 110, t, 1.3, { type: "sawtooth", gain: .28, slideTo: 660, attack: .13 });
     tone(a.effects, 55, t, 1.4, { type: "sine", gain: .45, slideTo: 110, attack: .12 });
@@ -211,11 +216,35 @@ export function playWhoosh(): void {
   }
 }
 
+
+/** Anticipation sting tied to the theatrical reveal, with a sampled riser and synthesis.
+ * Other sound themes keep their previous audio behaviour.
+ */
+export function playRevealBuild(): void {
+  if (theme !== "machine") { playWhoosh(); return; }
+  const a = audio();
+  if (!a) return;
+  const t = a.ctx.currentTime;
+  playSoundSample(a.ctx, a.effects, "build", .40);
+  noise(a.effects, t, 1.6, .16, 280, 6800);
+  tone(a.effects, 75, t, 1.6, { type: "sine", gain: .48, slideTo: 530, attack: .28 });
+  [247, 311, 392, 494].forEach((f,i) =>
+    tone(a.effects, f, t + i*.22, .45, { type: "triangle", gain: .15, attack: .05 }),
+  );
+  if (musicBus && musicTimer !== null) {
+    musicBus.gain.cancelScheduledValues(t);
+    musicBus.gain.setValueAtTime(musicBus.gain.value,t);
+    musicBus.gain.linearRampToValueAtTime(MUSIC_VOLUME * .15,t + .22);
+    musicBus.gain.linearRampToValueAtTime(MUSIC_VOLUME,t + 2.5);
+  }
+}
+
 export function playTada(): void {
   const a = audio();
   if (!a) return;
   const t = a.ctx.currentTime;
   if (theme === "machine") {
+    playSoundSample(a.ctx, a.effects, "reveal", 0.38);
     noise(a.effects, t, .4, .65, 5500, 300);
     tone(a.effects, 60, t, .9, { type: "sine", gain: 1, slideTo: 45 });
     [392, 494, 587, 784, 988].forEach((f, i) => tone(a.effects, f, t + .12 + i * .09, .7, { type: "triangle", gain: .45 }));

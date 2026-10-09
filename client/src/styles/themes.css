@@ -496,3 +496,8 @@ html[data-theme="machine"] .camera-stage .camera-message { background: rgba(13,1
   html[data-theme="machine"] .result-screen .portrait-frame::after { animation: none; }
   html[data-theme="machine"] .result-screen .portrait-frame::after { display: none; }
 }
+
+/* The attract gallery is always a background, including under the machine theme's stacking rules. */
+html[data-theme="machine"] .start-screen > .attract-backdrop { position: absolute; inset: 0; z-index: 0; }
+html[data-theme="machine"] .start-screen > .attract-content { position: relative; z-index: 2; }
+html[data-theme="machine"] .start-screen > .machine-attract { z-index: 1; pointer-events: none; }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { fetchBoothMeta, fetchSettings, fetchStyleIds, friendlyGenerateMessage, GenerateClientError, requestPortraits, upscalePortrait } from "./api/client";
-import { playError, playStyleCue, playTada, playTap, playWhoosh, setSoundTheme, startMusic, stopMusic } from "./audio/sound";
+import { playError, playStyleCue, playTap, playWhoosh, setSoundTheme, startMusic, stopMusic } from "./audio/sound";
 import { CameraScreen } from "./components/CameraScreen";
 import { DeveloperPanel } from "./components/DeveloperPanel";
 import { GeneratingScreen } from "./components/GeneratingScreen";
@@ -98,8 +98,6 @@ export function App() {
     }
     if (state.screen === "generating") {
       playWhoosh();
-    } else if (state.screen === "result") {
-      playTada();
     }
   }, [state.screen]);
 

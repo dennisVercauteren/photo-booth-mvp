@@ -8,7 +8,7 @@ import { logGeneration } from "../services/generationLog.js";
 import { saveGeneratedImage, saveSourceImage } from "../services/outputStore.js";
 import { getSettings } from "../services/settingsStore.js";
 import { styleService } from "../styles/styleService.js";
-import { PORTRAIT_VARIATIONS } from "../styles/variations.js";
+import { PORTRAIT_VARIATIONS, variationForStyle } from "../styles/variations.js";
 
 export function createGenerateRouter(provider: ImageGenerationProvider): Router {
   const router = Router();
@@ -39,11 +39,11 @@ export function createGenerateRouter(provider: ImageGenerationProvider): Router 
       const { imageCount } = await getSettings();
 
       const settled = await Promise.allSettled(
-        PORTRAIT_VARIATIONS.slice(0, imageCount).map((variation, index) =>
+        PORTRAIT_VARIATIONS.slice(0, imageCount).map((_variation, index) =>
           renderVariation({
             provider,
             styleId: style.id,
-            prompt: styleService.buildPrompt(style, variation),
+            prompt: styleService.buildPrompt(style, variationForStyle(style.id, index)),
             source,
             sourceWidth: image.size.width,
             sourceHeight: image.size.height,

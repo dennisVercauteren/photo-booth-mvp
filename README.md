@@ -293,3 +293,11 @@ To add more booth renderings, commit the new picture to `client/public/booth-des
 The guest homepage cycles through all **enabled, visible** character thumbnails every 6.5 seconds. Only one fills the screen at a time; the style label and cycle count provide a reason to linger. Disabling a style in Staff → Styles removes it from this loop as well as the selection grid. Reduced-motion mode disables the background pan.
 
 The three Gemini directions are Cinematic, Editorial, and Wild Card. The last direction now appends a unique imaginative scene for each character; all retain the same identity and group constraints. Creativity is intentionally prompt-driven rather than guaranteed. Validate the result with your paid Gemini key, including pairs and larger groups.
+
+## Sound samples and show reveal
+
+`npm run dev` and `npm run build` generate five **original, offline WAV sound effects** into `client/public/sounds/generated/`. The new sample mixer layers these with the existing Web Audio instruments for the Transformation Machine. No network or external downloads are required at an event.
+
+For richer *recorded* sound design, supply five licensed WAVs in `client/public/sounds/custom/`: `select.wav`, `camera.wav`, `transition.wav`, `build.wav`, `reveal.wav`. Set `VITE_SOUND_PACK=custom` in the client environment, then rebuild. The synth fallback remains available if any file cannot load. **No third-party recordings are included**; the generated pack is a functional placeholder for the professional samples.
+
+When generation completes, a guest sees four skippable reveal stages in the Transformation Machine theme: charging, scan, silhouette, flash. The final image is available after about two seconds or immediately on **Reveal now**. Reduced-motion preference skips effects. No reveal step retries or delays Gemini processing.

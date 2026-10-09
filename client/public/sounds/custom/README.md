@@ -1,0 +1,1 @@
+Add your licensed WAV samples here: select.wav, camera.wav, transition.wav, build.wav and reveal.wav. Set VITE_SOUND_PACK=custom and rebuild. Sample files are deliberately not included.\n

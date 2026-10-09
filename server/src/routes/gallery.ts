@@ -1,32 +1,49 @@
 import express, { Router } from "express";
-import fs from "node:fs/promises";
-import { galleryDir } from "../config.js";
+import fs from "node:fs";
+import fsp from "node:fs/promises";
+import path from "node:path";
+import { galleryDir, paths } from "../config.js";
 
 const PICTURE = /\.(jpe?g|png|webp)$/i;
+const designSources = [
+  path.join(paths.clientDist, "booth-designs"),
+  path.join(paths.repoRoot, "client", "public", "booth-designs"),
+];
+// Use built assets after a production build, and source assets during development.
+function designFolder(): string {
+  return designSources.find((folder) => fs.existsSync(folder)) ?? designSources[1];
+}
 
-/** Sales demo pictures: drop JPG, PNG or WebP files in the gallery folder; they show in name order. */
+async function galleryNames(folder: string): Promise<string[]> {
+  const names = await fsp.readdir(folder).catch((error: unknown) => {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") return [];
+    throw error;
+  });
+  return names.filter((name) => PICTURE.test(name) && !name.startsWith("."))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+}
+
+/** Separate gallery collections for on-site examples and GitHub-shipped physical designs. */
 export function createGalleryRouter(): Router {
   const router = Router();
-
   router.get("/api/gallery", async (_req, res, next) => {
     try {
-      const names = await fs.readdir(galleryDir).catch((error: unknown) => {
-        if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
-          return [];
-        }
-        throw error;
+      const [photos, designs] = await Promise.all([
+        galleryNames(galleryDir),
+        galleryNames(designFolder()),
+      ]);
+      res.json({
+        // Keep 'pictures' for existing API clients.
+        pictures: photos.map((name) => `/api/gallery/photos/${encodeURIComponent(name)}`),
+        boothDesigns: designs.map((name) => `/api/gallery/booth-designs/${encodeURIComponent(name)}`),
       });
-      const pictures = names
-        .filter((name) => PICTURE.test(name) && !name.startsWith("."))
-        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-        .map((name) => `/gallery/${encodeURIComponent(name)}`);
-      res.json({ pictures });
-    } catch (error) {
-      next(error);
-    }
+    } catch (error) { next(error); }
   });
 
+  // Using /api/... ensures images work in both Vite dev proxy and built kiosk server.
+  router.use("/api/gallery/photos", express.static(galleryDir, { index: false, dotfiles: "ignore" }));
+  router.use("/api/gallery/booth-designs", express.static(designFolder(), { index: false, dotfiles: "ignore" }));
+  // Backwards compatibility for links from older kiosk releases.
   router.use("/gallery", express.static(galleryDir, { index: false, dotfiles: "ignore" }));
-
   return router;
 }

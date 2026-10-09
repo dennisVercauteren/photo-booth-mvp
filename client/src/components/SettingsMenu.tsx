@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchGallery, saveSettings } from "../api/client";
+import { fetchGallery, saveSettings, type DemoCollections } from "../api/client";
 import {
   connectWifi,
   fetchSpeakers,
@@ -326,48 +326,52 @@ function LookPanel({ current, onSaved, onClose }: SettingsMenuProps) {
 }
 
 function DemoPanel() {
-  const [pictures, setPictures] = useState<string[] | null>(null);
+  const [collections, setCollections] = useState<DemoCollections | null>(null);
+  const [category, setCategory] = useState<keyof DemoCollections>("boothDesigns");
   const [error, setError] = useState<string | null>(null);
   const [showing, setShowing] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
     fetchGallery(controller.signal)
-      .then(setPictures)
+      .then(setCollections)
       .catch((loadError: unknown) => {
-        if (!controller.signal.aborted) {
-          setError(errorText(loadError, "Could not load the demo pictures."));
-        }
+        if (!controller.signal.aborted) setError(errorText(loadError, "Could not load demo pictures."));
       });
     return () => controller.abort();
   }, []);
 
+  const pictures = collections?.[category] ?? [];
   return (
     <>
       <div className="settings-field">
-        <p className="settings-label">Sales demo</p>
-        <p className="settings-hint">A full-screen slideshow of example pictures to show customers. Swipe or tap the sides to browse.</p>
-        {pictures && pictures.length === 0 ? (
-          <p className="settings-empty">No demo pictures yet. They go in /opt/photobooth/shared/gallery.</p>
+        <p className="settings-label">Sales demo gallery</p>
+        <p className="settings-hint">Choose a collection to present. Swipe or tap either side to browse; the presentation advances automatically.</p>
+        <div className="settings-demo-categories" role="group" aria-label="Sales demo category">
+          <button type="button" className={category === "boothDesigns" ? "settings-option selected" : "settings-option"} aria-pressed={category === "boothDesigns"} onClick={() => setCategory("boothDesigns")}>
+            Physical booths ({collections?.boothDesigns.length ?? "…"})
+          </button>
+          <button type="button" className={category === "portraits" ? "settings-option selected" : "settings-option"} aria-pressed={category === "portraits"} onClick={() => setCategory("portraits")}>
+            Portrait examples ({collections?.portraits.length ?? "…"})
+          </button>
+        </div>
+        {collections && pictures.length === 0 ? (
+          <p className="settings-empty">{category === "boothDesigns"
+            ? "No physical booth renders yet. Commit JPG, PNG or WebP images to client/public/booth-designs/."
+            : "No sales photos yet. Add JPG, PNG or WebP images to the shared/gallery directory on the booth."}</p>
         ) : null}
-        {pictures && pictures.length > 0 ? (
+        {pictures.length > 0 ? (
           <div className="settings-demo-strip">
-            {pictures.slice(0, 6).map((url) => (
-              <img key={url} src={url} alt="" />
-            ))}
+            {pictures.slice(0, 6).map((url) => <img key={url} src={url} alt="" loading="lazy" />)}
           </div>
         ) : null}
-        <button
-          type="button"
-          className="button button-primary settings-wide"
-          disabled={!pictures || pictures.length === 0}
+        <button type="button" className="button button-primary settings-wide"
+          disabled={!collections || pictures.length === 0}
           onClick={() => setShowing(true)}
-        >
-          {pictures ? `Start demo (${pictures.length})` : "Loading..."}
-        </button>
+        >{collections ? `Start ${category === "boothDesigns" ? "booth" : "portrait"} demo (${pictures.length})` : "Loading..."}</button>
       </div>
-      {error ? <p className="inline-error">{error}</p> : null}
-      {showing && pictures ? <DemoGallery pictures={pictures} onClose={() => setShowing(false)} /> : null}
+      {error ? <p className="inline-error" role="alert">{error}</p> : null}
+      {showing && pictures.length > 0 ? <DemoGallery pictures={pictures} onClose={() => setShowing(false)} /> : null}
     </>
   );
 }

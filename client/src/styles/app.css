@@ -1696,3 +1696,7 @@ button:disabled {
   .action-row.result-actions { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .result-screen { overflow-y: auto; }
 }
+
+/* Staff sales demo collections: two large touch targets. */
+.settings-demo-categories { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+.settings-demo-categories .settings-option { min-height: 64px; padding: 8px; white-space: normal; font-size: .95rem; }

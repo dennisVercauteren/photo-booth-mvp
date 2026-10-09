@@ -276,3 +276,14 @@ you explicitly change them; the older looks and soundtracks are still supported.
 
 GitHub Actions runs `npm ci`, `npm run typecheck`, and `npm run build` on every PR.
 A real image-generation smoke test still requires your billed Gemini key and camera.
+
+## Physical booth design gallery
+
+The operator's **Staff → Demo** tab has two independent collections:
+
+- **Physical booths:** committed images in `client/public/booth-designs/` ship with the GitHub release and are available on kiosk deployments after building the client. Use names such as `01-kpop-festival.webp`; JPG, PNG and WebP are supported, alphabetically sorted.
+- **Portrait examples:** operator-provided local pictures in `shared/gallery/` (or `BOOTH_GALLERY_DIR`, e.g. `/opt/photobooth/shared/gallery/`). These do not need to be committed and survive upgrades.
+
+The server lists both under `GET /api/gallery` as `pictures` and `boothDesigns`, and serves the files under `/api/gallery/photos/` and `/api/gallery/booth-designs/`. The /api route ensures previews work through the development proxy as well as the production kiosk process. The old /gallery path remains available for compatibility.
+
+To add more booth renderings, commit the new picture to `client/public/booth-designs/`, deploy the release (including a fresh client build), and reopen **Staff → Demo → Physical booths**. Files are sorted by name; no code change is needed.

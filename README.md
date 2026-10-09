@@ -114,6 +114,10 @@ Lists (the style grid, the staff settings) scroll with a finger swipe on any scr
 1. **Raspberry Pi kiosk:** run `kiosk/setup-touch.sh` once as the kiosk user. Raspberry Pi OS turns touches into mouse clicks for every panel it knows (`mouseEmulation="yes"` in labwc). The script turns that off for all of them and adds a catch-all rule, so a new or bigger touchscreen also sends real touch.
 2. **In the app:** if a screen still sends mouse events, dragging a list with the "mouse" scrolls it anyway (`client/src/lib/dragScroll.ts`). A drag never counts as a tap.
 
+## Wi-Fi from the staff menu
+
+The Wi-Fi tab in the staff settings scans and joins networks through NetworkManager (`nmcli`). The booth service runs without a login session, and by default NetworkManager only allows that after a password prompt nobody can answer. On a Raspberry Pi kiosk, run `kiosk/setup-network.sh` once as the kiosk user. It installs a polkit rule (`/etc/polkit-1/rules.d/50-photobooth-network.rules`) that lets that user scan, join and save Wi-Fi networks, nothing more. Joined networks are saved system-wide, so they reconnect after a reboot.
+
 ## Customer flow
 
 1. Start

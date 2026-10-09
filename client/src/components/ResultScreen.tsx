@@ -8,6 +8,9 @@ import { useState } from "react";
 import { RevealOverlay } from "./RevealOverlay";
 import type { GeneratedPhoto } from "../types";
 
+/** The collector card is hidden from guests for now; set to true to show the button again. */
+const SHOW_COLLECTOR_CARD = false;
+
 interface ResultScreenProps {
   options: GeneratedPhoto[];
   selected: GeneratedPhoto;
@@ -109,7 +112,9 @@ export function ResultScreen({
             {action.label}
           </button>
         ))}
-        <button type="button" className="button button-secondary" onClick={() => void saveCard()}>Save Collector Card</button>
+        {SHOW_COLLECTOR_CARD ? (
+          <button type="button" className="button button-secondary" onClick={() => void saveCard()}>Save Collector Card</button>
+        ) : null}
         </div>
         {posterError ? <p className="inline-error" role="alert">{posterError}</p> : null}
       </footer>

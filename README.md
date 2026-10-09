@@ -107,6 +107,13 @@ npm run dev:client
 
 The preview shows a 5:4 guide, the same shape as a 5 by 4 inch print, and the words **LOOK AT THE CAMERA**. The guide is only an overlay. The file sent to Gemini is the full camera frame. The generated picture is composed at 5:4 so it can print edge to edge on that paper.
 
+## Touchscreens
+
+Lists (the style grid, the staff settings) scroll with a finger swipe on any screen size. Two layers make sure of that:
+
+1. **Raspberry Pi kiosk:** run `kiosk/setup-touch.sh` once as the kiosk user. Raspberry Pi OS turns touches into mouse clicks for every panel it knows (`mouseEmulation="yes"` in labwc). The script turns that off for all of them and adds a catch-all rule, so a new or bigger touchscreen also sends real touch.
+2. **In the app:** if a screen still sends mouse events, dragging a list with the "mouse" scrolls it anyway (`client/src/lib/dragScroll.ts`). A drag never counts as a tap.
+
 ## Customer flow
 
 1. Start

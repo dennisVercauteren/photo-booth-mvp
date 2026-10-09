@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { installDragScroll } from "./lib/dragScroll";
 import "./styles/app.css";
 import "./styles/themes.css";
 
@@ -20,4 +21,5 @@ if (!root) {
   throw new Error("Missing root element.");
 }
 
+installDragScroll();
 createRoot(root).render(<Root />);

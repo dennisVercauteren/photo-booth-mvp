@@ -275,3 +275,222 @@ html[data-theme] .settings-backdrop {
   --yellow: #ffc93c;
   --sky: #2bb3ff;
 }
+
+/* TRANSFORMATION MACHINE — lightweight CSS-only show look. */
+.machine-attract, .machine-ticker, .machine-camera-status, .machine-label, .machine-orbit, .machine-fineprint { display: none; }
+html[data-theme="machine"] .booth {
+  --text: #f9f7ff; --muted: #c1bdd9; --ink: #12102e;
+  --pink: #b17aff; --pink-deep: #7640dc; --yellow: #a1ffdb;
+  --sky: #55e9ff; --teal: #60f1df; --card: #211c44;
+  background:
+    radial-gradient(ellipse 50% 58% at 50% 51%, rgba(137,62,249,.22), transparent 85%),
+    radial-gradient(ellipse 40% 40% at 98% 5%, rgba(48,202,243,.14), transparent 80%),
+    repeating-linear-gradient(0deg, rgba(182,172,255,.035) 0 1px, transparent 1px 60px),
+    repeating-linear-gradient(90deg, rgba(182,172,255,.035) 0 1px, transparent 1px 60px), #0d0b23;
+}
+html[data-theme="machine"] .booth::before {
+  height: 6px; background: linear-gradient(90deg,#4b2cf4,#bf5cff 35%,#5ef5df 68%,#4b2cf4);
+  box-shadow: 0 0 24px rgba(121,100,255,.75);
+}
+html[data-theme="machine"] .screen h1 {
+  color: #fcfaff; text-shadow: 0 5px 30px rgba(141,88,255,.26);
+  text-transform: uppercase; letter-spacing: -.035em;
+}
+html[data-theme="machine"] .eyebrow {
+  transform: none; border-radius: 6px; border: 1px solid rgba(94,245,223,.65);
+  background: rgba(32,27,68,.84); color: #a1ffdb;
+  font-family: "Nunito",sans-serif; letter-spacing: .2em;
+  font-size: clamp(.75rem,1.2vw,.95rem);
+}
+html[data-theme="machine"] .screen .lede { color: #d8d2ff; }
+html[data-theme="machine"] .screen .button {
+  border-radius: 13px; border: 2px solid #b894ff; text-transform: uppercase;
+  letter-spacing: .055em; font-size: clamp(1rem,1.55vw,1.3rem);
+}
+html[data-theme="machine"] .button-primary {
+  background: linear-gradient(135deg,#b17aff,#6c52f6 80%); color: #fff;
+  box-shadow: 0 7px 0 #37246a, 0 0 24px rgba(151,102,255,.3);
+}
+html[data-theme="machine"] .button-secondary {
+  background: #231e45; color: #e7e7ff; box-shadow: 0 6px 0 #08071a;
+}
+html[data-theme="machine"] .start-screen { position: relative; isolation: isolate; }
+html[data-theme="machine"] .start-screen > :not(.machine-attract) { position: relative; z-index: 1; }
+html[data-theme="machine"] .start-screen h1 {
+  max-width: 1100px; font-size: clamp(3.3rem,7.4vw,7.7rem); line-height: .95;
+  text-shadow: 0 8px 0 rgba(27,12,66,.9), 0 0 44px rgba(187,99,255,.32);
+}
+html[data-theme="machine"] .start-screen h1 span {
+  display: block; transform: none; font-size: .55em; letter-spacing: .035em;
+  color: #a1ffdb; text-shadow: 0 0 24px rgba(94,245,223,.3);
+}
+html[data-theme="machine"] .start-button {
+  animation: machineBreath 2.8s ease-in-out infinite;
+  min-height: 100px; margin-top: 30px;
+}
+html[data-theme="machine"] .polaroid {
+  background: #231e45; border: 2px solid rgba(163,130,255,.65);
+  border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+html[data-theme="machine"] .polaroid figcaption { color: #f0eaff; }
+html[data-theme="machine"] .machine-attract {
+  position: absolute; z-index: 0; display: block;
+  width: min(65vw,66vh); aspect-ratio: 1; top: 44%; left: 50%;
+  transform: translate(-50%,-50%); opacity: .6; pointer-events: none;
+}
+html[data-theme="machine"] .machine-attract span {
+  position: absolute; inset: 0; border: 2px dashed rgba(94,245,223,.38);
+  border-radius: 50%; animation: machineSpin 27s linear infinite;
+}
+html[data-theme="machine"] .machine-attract span:nth-child(2) {
+  inset: 12%; border: 7px dotted rgba(194,105,255,.36);
+  animation-direction: reverse; animation-duration: 18s;
+}
+html[data-theme="machine"] .machine-attract span:nth-child(3) {
+  inset: 25%; border: 2px solid rgba(94,245,223,.28);
+  box-shadow: 0 0 95px 45px rgba(112,69,213,.2);
+}
+html[data-theme="machine"] .machine-ticker {
+  display: block; margin: 20px 0 0; font-size: clamp(.68rem,1vw,.9rem);
+  font-weight: 800; letter-spacing: .13em; color: #a5a0bd;
+}
+html[data-theme="machine"] .machine-ticker span { margin: 0 10px; color: #a1ffdb; }
+html[data-theme="machine"] .style-card,
+html[data-theme="machine"] .style-card:nth-child(even) {
+  transform: none; border: 2px solid rgba(194,163,255,.6); border-radius: 14px;
+  box-shadow: 0 8px 0 #100e2c, 0 18px 30px rgba(0,0,0,.3);
+}
+html[data-theme="machine"] .style-card:active { transform: scale(.97); }
+html[data-theme="machine"] .style-card::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg,transparent 30%,rgba(10,8,32,.28) 65%,rgba(10,8,32,.64));
+}
+html[data-theme="machine"] .style-copy {
+  z-index: 1; background: rgba(18,13,44,.94);
+  border: 1px solid rgba(169,135,255,.5); box-shadow: none;
+}
+html[data-theme="machine"] .style-name { color: white; }
+html[data-theme="machine"] .style-description { color: #c8c1e5; }
+html[data-theme="machine"] .style-index {
+  z-index: 1; border-radius: 9px; background: #a1ffdb;
+  border: 2px solid #0d0b23; font-size: 1.2rem;
+}
+html[data-theme="machine"] .video-shell {
+  border-radius: 15px; border: 4px solid #8974c9;
+  box-shadow: 0 0 0 5px rgba(38,26,96,.7), 0 0 55px rgba(108,82,246,.33);
+}
+html[data-theme="machine"] .video-shell::after {
+  content: ""; position: absolute; z-index: 1; left: 0; right: 0;
+  top: 5%; height: 4px; background: #a1ffdb;
+  box-shadow: 0 0 18px 5px rgba(94,245,223,.34);
+  pointer-events: none; animation: machineScan 6s ease-in-out infinite alternate;
+}
+html[data-theme="machine"] .machine-camera-status {
+  display: flex; position: absolute; z-index: 2; left: 12px; bottom: 12px;
+  align-items: center; gap: 7px; padding: 8px 12px;
+  background: rgba(13,11,35,.85); border: 1px solid #a1ffdb; border-radius: 5px;
+  font: 800 clamp(.6rem,1vw,.8rem) "Nunito",sans-serif;
+  letter-spacing: .05em; color: #a1ffdb;
+}
+html[data-theme="machine"] .machine-camera-status span {
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+}
+html[data-theme="machine"] .countdown {
+  color: #a1ffdb; background: rgba(9,7,28,.55); text-shadow: 0 0 75px #c86fff;
+}
+html[data-theme="machine"] .portrait-frame img {
+  border: 4px solid #a78de7; border-radius: 14px;
+  box-shadow: 0 0 38px rgba(122,89,255,.38);
+}
+html[data-theme="machine"] .generating-screen {
+  grid-template-rows: minmax(0,1fr) auto; gap: 12px;
+}
+html[data-theme="machine"] .transformation-stage { isolation: isolate; }
+html[data-theme="machine"] .transformation-stage img {
+  max-height: 100%; animation: none;
+  filter: saturate(.4) brightness(.5) hue-rotate(22deg);
+}
+html[data-theme="machine"] .machine-orbit {
+  position: absolute; display: grid; place-items: center; z-index: 1;
+  width: min(38vh,60vw); aspect-ratio: 1; pointer-events: none;
+}
+html[data-theme="machine"] .orbit {
+  position: absolute; inset: 0; border: 3px dashed #a1ffdb;
+  border-radius: 50%; animation: machineSpin 8s linear infinite;
+  box-shadow: 0 0 24px rgba(94,245,223,.22);
+}
+html[data-theme="machine"] .orbit-middle {
+  inset: 15%; border-color: #cb8bff; animation-direction: reverse; animation-duration: 5s;
+}
+html[data-theme="machine"] .orbit-inner {
+  inset: 30%; border-style: solid; border-color: rgba(255,255,255,.6);
+  animation-duration: 12s;
+}
+html[data-theme="machine"] .orbit-symbol {
+  font-size: clamp(3rem,7vw,6rem); color: #fff; text-shadow: 0 0 26px #a46aff;
+}
+html[data-theme="machine"] .machine-label {
+  display: block; margin: 0; color: #a1ffdb;
+  letter-spacing: .2em; font-weight: 800; font-size: .85rem;
+}
+html[data-theme="machine"] .generating-copy { gap: 9px; }
+html[data-theme="machine"] .generating-copy h1 { font-size: clamp(1.9rem,3.5vw,3.2rem); }
+html[data-theme="machine"] .generating-copy .lede { margin: 0; font-size: clamp(1rem,1.6vw,1.35rem); }
+html[data-theme="machine"] .machine-fineprint { display: block; margin: 0; color: #8e88af; font-size: .9rem; }
+html[data-theme="machine"] .progress {
+  height: 12px; margin: 8px 0; border: 1px solid #a78de7; background: #272145;
+}
+html[data-theme="machine"] .progress span {
+  background: linear-gradient(90deg,#6956fc,#a1ffdb);
+  box-shadow: 0 0 18px #a1ffdb;
+}
+html[data-theme="machine"] .choice {
+  background: #1b173c; border: 2px solid #594a95; border-radius: 8px;
+}
+html[data-theme="machine"] .choice span {
+  width: auto; height: auto; min-width: auto; border-radius: 5px;
+  font-size: clamp(.75rem,1.1vw,1rem); padding: 5px 10px; background: #a1ffdb;
+}
+html[data-theme="machine"] .choice-selected {
+  border-color: #a1ffdb; box-shadow: 0 0 24px rgba(94,245,223,.5);
+  transform: translateY(-4px);
+}
+html[data-theme="machine"] .result-screen .portrait-frame {
+  animation: machineReveal .9s cubic-bezier(.17,.84,.28,1) both;
+}
+html[data-theme="machine"] .result-screen .portrait-frame::after {
+  content: ""; position: absolute; inset: 0;
+  background: #e7dfff; pointer-events: none;
+  animation: machineFlash .75s ease-out both;
+}
+html[data-theme="machine"] .result-screen .action-row .button {
+  min-height: 70px; font-size: clamp(.8rem,1.2vw,1.15rem); padding: 8px;
+}
+html[data-theme="machine"] .settings-gear { color: #fff; }
+html[data-theme="machine"] .camera-stage .camera-message { background: rgba(13,11,35,.96); }
+@keyframes machineSpin { to { transform: rotate(360deg); } }
+@keyframes machineScan { to { top: 93%; } }
+@keyframes machineBreath {
+  50% { filter: brightness(1.2); box-shadow: 0 8px 28px rgba(161,255,219,.3); }
+}
+@keyframes machineReveal {
+  0% { opacity: 0; transform: scale(.85) rotate(-1.5deg); filter: contrast(3) brightness(2); }
+  55% { opacity: 1; filter: contrast(1.6) brightness(1.3); }
+  100% { transform: scale(1); filter: none; }
+}
+@keyframes machineFlash { 0% { opacity: .9; } 100% { opacity: 0; } }
+@media (max-width: 720px), (max-height: 740px) {
+  html[data-theme="machine"] .machine-ticker { display: none; }
+  html[data-theme="machine"] .start-screen h1 { font-size: clamp(2.8rem,9vw,5.5rem); }
+  html[data-theme="machine"] .result-screen { overflow-y: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="machine"] .start-button,
+  html[data-theme="machine"] .machine-attract span,
+  html[data-theme="machine"] .video-shell::after,
+  html[data-theme="machine"] .machine-orbit *,
+  html[data-theme="machine"] .result-screen .portrait-frame,
+  html[data-theme="machine"] .result-screen .portrait-frame::after { animation: none; }
+  html[data-theme="machine"] .result-screen .portrait-frame::after { display: none; }
+}

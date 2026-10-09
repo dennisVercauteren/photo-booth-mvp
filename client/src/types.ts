@@ -47,8 +47,8 @@ export interface BoothSettings {
   soundTheme: SoundTheme;
 }
 
-export const VISUAL_THEMES = ["carnival", "neon", "elegant"] as const;
-export const SOUND_THEMES = ["carnival", "arcade", "lounge"] as const;
+export const VISUAL_THEMES = ["machine", "carnival", "neon", "elegant"] as const;
+export const SOUND_THEMES = ["machine", "carnival", "arcade", "lounge"] as const;
 export type VisualTheme = (typeof VISUAL_THEMES)[number];
 export type SoundTheme = (typeof SOUND_THEMES)[number];
 

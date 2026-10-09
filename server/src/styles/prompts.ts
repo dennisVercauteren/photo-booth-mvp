@@ -16,12 +16,12 @@ Maintain realistic human anatomy for every person.
 
 Change clothing, accessories, environment and lighting. Leave the face, hair and body alone.
 
-The result must look like a professional photograph of the original people genuinely present in the requested environment.
+The people must look like the original people genuinely present in the requested environment, even when the setting is fantastical or editorial.
 
-Photorealistic.
-Natural skin texture.
-Realistic facial detail.
-Professional photographic lighting.
+Photorealistic people and natural skin texture.
+Realistic facial detail and believable anatomy.
+High-quality art direction and lighting.
+The variation prompt decides whether the surroundings are cinematic, editorial, or surreal.
 High detail.
 No text.
 No logos.
@@ -43,7 +43,7 @@ Apply the requested clothing, setting, and lighting to each person in a way that
 
 If a tight portrait would crop someone out, widen the framing so the whole group remains visible.`;
 
-export const OUTPUT_REQUIREMENTS = `Return one final transformed photographic image of the same people who are in the source.
+export const OUTPUT_REQUIREMENTS = `Return one final transformed image of the same people who are in the source.
 
 Do not generate a collage.
 

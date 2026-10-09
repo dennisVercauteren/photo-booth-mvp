@@ -38,12 +38,14 @@ const TABS: { id: Tab; label: string }[] = [
 const SAVE_TABS: readonly Tab[] = ["photos", "styles", "look"];
 
 const VISUAL_THEME_OPTIONS: { id: VisualTheme; label: string; hint: string; swatch: string[] }[] = [
+  { id: "machine", label: "Transformation Machine", hint: "Immersive neon sci-fi show", swatch: ["#0d0b23", "#a26bff", "#5ef5df"] },
   { id: "carnival", label: "Carnival", hint: "Bright and playful", swatch: ["#ff3d9a", "#ffc93c", "#2bb3ff"] },
   { id: "neon", label: "Neon Night", hint: "Dark with glowing colours", swatch: ["#120d2b", "#ff2fb4", "#21e6ff"] },
   { id: "elegant", label: "Elegant", hint: "Ivory and gold, for weddings", swatch: ["#f7f2e8", "#b8935a", "#26201c"] },
 ];
 
 const SOUND_THEME_OPTIONS: { id: SoundTheme; label: string; hint: string }[] = [
+  { id: "machine", label: "Transformation Machine", hint: "Sci-fi pulses, dramatic reveals, character cues" },
   { id: "carnival", label: "Carnival", hint: "Bouncy fairground tune" },
   { id: "arcade", label: "Arcade", hint: "8-bit game sounds" },
   { id: "lounge", label: "Lounge", hint: "Soft and chic" },

@@ -1753,3 +1753,54 @@ html[data-theme="machine"] .start-screen .machine-attract { opacity: .17; left: 
 @media (prefers-reduced-motion: reduce) {
   .attract-feature { animation: none; }
 }
+
+/* Theatrical four-stage reveal; controlled by React, not a fake processing progress. */
+.result-reveal {
+  position: fixed; inset: 0; z-index: 65; overflow: hidden; display: grid;
+  place-items: center; background: radial-gradient(circle at center,#30215b 0%,#120e2f 58%,#080617 100%);
+  color: white; isolation: isolate; text-align: center;
+}
+.reveal-rings { position: absolute; width: min(76vw,70vh); aspect-ratio: 1; }
+.reveal-rings i {
+  position: absolute; inset: 0; border-radius: 50%; border: 3px dashed rgba(112,255,238,.5);
+  box-shadow: 0 0 28px rgba(142,84,244,.4); animation: machineSpin 4s linear infinite;
+}
+.reveal-rings i:nth-child(2) { inset: 18%; border-color: #bb78ff; animation-direction: reverse; animation-duration: 2.5s; }
+.reveal-rings i:nth-child(3) { inset: 34%; border-style: solid; border-color: rgba(255,255,255,.4); animation-duration: 1.2s; }
+.reveal-silhouette {
+  position: absolute; width: min(80vw,67vh); height: min(70vh,85vw);
+  display: grid; place-items: center; opacity: .07; transform: scale(.83);
+  transition: opacity .45s ease,transform .45s ease;
+}
+.reveal-silhouette img {
+  max-width: 100%; max-height: 100%; object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 0 30px #b77fff);
+}
+.reveal-scan-line {
+  position: absolute; left: 0; right: 0; top: 18%; height: 4px; opacity: .3;
+  background: #a1ffdb; box-shadow: 0 0 18px 4px rgba(94,245,223,.65);
+  animation: machineScan .8s linear infinite alternate;
+}
+.reveal-whiteout { position: absolute; inset: 0; z-index: 3; opacity: 0; background: #fff; pointer-events: none; }
+.reveal-message {
+  position: relative; z-index: 2; padding: 24px; display: grid; justify-items: center; gap: 12px;
+  text-shadow: 0 5px 28px rgba(0,0,0,.5);
+}
+.reveal-message strong { font: 900 clamp(2rem,6vw,6rem) "Fredoka",sans-serif; line-height: 1.05; max-width: 1000px; }
+.reveal-kicker { color: #a1ffdb; font: 800 1rem "Nunito",sans-serif; letter-spacing: .2em; }
+.reveal-message small { color: #d6d0e8; font: 700 .85rem "Nunito",sans-serif; letter-spacing: .18em; }
+.reveal-skip {
+  position: absolute; right: 25px; bottom: 24px; z-index: 5;
+  min-width: 155px; min-height: 58px; border: 2px solid #b5a1ec; border-radius: 12px;
+  background: rgba(18,12,50,.9); color: #fff; font: 800 1rem "Nunito",sans-serif;
+}
+.reveal-scan .reveal-scan-line { opacity: 1; }
+.reveal-scan .reveal-rings { filter: brightness(1.35); }
+.reveal-silhouette .reveal-silhouette { opacity: .72; transform: scale(1); }
+.reveal-silhouette .reveal-message strong { color: #a1ffdb; }
+.reveal-flash .reveal-whiteout { animation: revealBurst .36s ease-in both; }
+.reveal-flash .reveal-message { opacity: 0; }
+@keyframes revealBurst { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: .92; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal-rings i,.reveal-scan-line,.reveal-whiteout { animation: none; }
+}

@@ -281,7 +281,7 @@ html[data-theme] .settings-backdrop {
 html[data-theme="machine"] .booth {
   --text: #f9f7ff; --muted: #c1bdd9; --ink: #12102e;
   --pink: #b17aff; --pink-deep: #7640dc; --yellow: #a1ffdb;
-  --sky: #55e9ff; --teal: #60f1df; --card: #211c44;
+  --sky: #55e9ff; --teal: #60f1df; --card: #211c44; --danger: #ff8f9a;
   background:
     radial-gradient(ellipse 50% 58% at 50% 51%, rgba(137,62,249,.22), transparent 85%),
     radial-gradient(ellipse 40% 40% at 98% 5%, rgba(48,202,243,.14), transparent 80%),

@@ -44,7 +44,7 @@ export function StartScreen({ hiddenStyles = [], onStart, onOpenSettings }: Star
       <h1>
         <span>Meet your</span> Alter Ego
       </h1>
-      <p className="lede">One photo. Three alternate realities. Anything can happen.</p>
+      <p className="lede">One photo. A whole new reality. Anything can happen.</p>
       <p className="machine-ticker">IDENTITY SCANNER ONLINE <span>◆</span> REALITY ENGINE READY <span>◆</span> ENTER AT YOUR OWN RISK</p>
       <button type="button" className="button button-primary start-button" onClick={onStart}>
         Transform me!

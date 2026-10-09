@@ -58,3 +58,8 @@ export function speakerAction(action: "connect" | "disconnect" | "forget", addre
 export function setSpeakerVolume(volume: number): Promise<{ volume: number | null }> {
   return request("speaker/volume", { volume });
 }
+
+/** Hide the kiosk window so staff can reach the Pi desktop; reopen it from the taskbar. */
+export function minimizeApp(): Promise<{ ok: true }> {
+  return request("minimize", {});
+}

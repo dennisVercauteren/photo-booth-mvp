@@ -118,6 +118,10 @@ Lists (the style grid, the staff settings) scroll with a finger swipe on any scr
 
 The Wi-Fi tab in the staff settings scans and joins networks through NetworkManager (`nmcli`). The booth service runs without a login session, and by default NetworkManager only allows that after a password prompt nobody can answer. On a Raspberry Pi kiosk, run `kiosk/setup-network.sh` once as the kiosk user. It installs a polkit rule (`/etc/polkit-1/rules.d/50-photobooth-network.rules`) that lets that user scan, join and save Wi-Fi networks, nothing more. Joined networks are saved system-wide, so they reconnect after a reboot.
 
+## Minimise the app from the staff menu
+
+Settings → System → **Minimise app** hides the kiosk Chromium window so staff can reach the Pi desktop; tap Chromium in the taskbar to bring it back. The server does this with `wlrctl` (labwc supports the wlr-foreign-toplevel protocol it uses), so install it once on each booth: `sudo apt install wlrctl`.
+
 ## Customer flow
 
 1. Start

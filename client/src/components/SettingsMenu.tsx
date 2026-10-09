@@ -4,6 +4,7 @@ import {
   connectWifi,
   fetchSpeakers,
   fetchWifi,
+  minimizeApp,
   setSpeakerVolume,
   speakerAction,
   type SpeakerDevice,
@@ -23,7 +24,7 @@ interface SettingsMenuProps {
   onClose: () => void;
 }
 
-type Tab = "photos" | "styles" | "look" | "demo" | "speaker" | "wifi";
+type Tab = "photos" | "styles" | "look" | "demo" | "speaker" | "wifi" | "system";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "photos", label: "Photos" },
@@ -32,6 +33,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "demo", label: "Demo" },
   { id: "speaker", label: "Speaker" },
   { id: "wifi", label: "Wi-Fi" },
+  { id: "system", label: "System" },
 ];
 
 /** Tabs with their own Save and Cancel buttons; the others get a Close button. */
@@ -81,6 +83,7 @@ export function SettingsMenu({ current, onSaved, onClose }: SettingsMenuProps) {
           {tab === "demo" ? <DemoPanel /> : null}
           {tab === "speaker" ? <SpeakerPanel /> : null}
           {tab === "wifi" ? <WifiPanel /> : null}
+          {tab === "system" ? <SystemPanel onClose={onClose} /> : null}
         </div>
         {!SAVE_TABS.includes(tab) ? (
           <button type="button" className="button button-secondary settings-close" onClick={onClose}>
@@ -89,6 +92,33 @@ export function SettingsMenu({ current, onSaved, onClose }: SettingsMenuProps) {
         ) : null}
       </section>
     </div>
+  );
+}
+
+function SystemPanel({ onClose }: { onClose: () => void }) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function minimize(): Promise<void> {
+    setBusy(true);
+    setError(null);
+    try {
+      await minimizeApp();
+      onClose();
+    } catch (minimizeError) {
+      setError(errorText(minimizeError, "Could not minimise the app."));
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <p className="settings-hint">Hide the booth app to reach the Pi desktop. Tap the Chromium button in the taskbar to bring it back.</p>
+      <button type="button" className="button button-primary" disabled={busy} onClick={minimize}>
+        Minimise app
+      </button>
+      {error ? <p className="inline-error" role="alert">{error}</p> : null}
+    </>
   );
 }
 

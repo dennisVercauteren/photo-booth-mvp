@@ -1745,6 +1745,23 @@ html[data-theme="machine"] .start-screen .machine-attract { opacity: .17; left: 
   .start-screen .attract-content h1 { font-size: clamp(2.5rem,10vw,4.4rem); }
   .attract-now-showing { justify-content: center; }
 }
+/* Portrait booth: the sample photo gets the top of the screen and the text sits below it, never on top. */
+@media (max-width: 700px) {
+  .start-screen { grid-template-rows: minmax(0,1fr) auto; place-items: stretch; align-content: stretch; gap: 10px; }
+  .start-screen > .attract-backdrop,
+  html[data-theme="machine"] .start-screen > .attract-backdrop { display: contents; }
+  .attract-ambient, .attract-shade { z-index: 0; }
+  .attract-feature {
+    position: relative; z-index: 1; grid-row: 1; inset: auto; min-height: 0;
+    object-position: center; opacity: 1; animation-name: attractEnterUp, attractFloat;
+  }
+  .attract-shade { background: linear-gradient(0deg,rgba(8,5,24,.9),rgba(8,5,24,.55) 45%,rgba(8,5,24,.15)); }
+  .attract-content { grid-row: 2; align-self: end; margin: 0; gap: 4px; }
+  .start-screen .attract-content .start-button,
+  html[data-theme="machine"] .start-screen .attract-content .start-button { margin-top: 12px; min-height: 78px; }
+  .attract-now-showing { margin-top: 8px; }
+}
+@keyframes attractEnterUp { from { opacity: 0; transform: translateY(2%) scale(1.025); } to { opacity: 1; transform: none; } }
 @media (max-height: 720px) and (min-width: 701px) {
   .attract-content { gap: 2px; }
   .start-screen .attract-content h1 { font-size: clamp(2.5rem,6.5vw,5rem); }

@@ -7,6 +7,7 @@ import {
   getSpeakerStatus,
   getWifiStatus,
   isBluetoothAddress,
+  minimizeKiosk,
   setVolume,
 } from "../services/deviceControl.js";
 
@@ -72,6 +73,14 @@ export function createDeviceRouter(): Router {
     await respond(res, async () => {
       await handler(address);
       return getSpeakerStatus();
+    });
+  });
+
+  router.post("/device/minimize", async (_req, res) => {
+    console.info("[device] minimize kiosk window");
+    await respond(res, async () => {
+      await minimizeKiosk();
+      return { ok: true };
     });
   });
 

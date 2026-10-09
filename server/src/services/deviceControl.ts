@@ -224,3 +224,16 @@ export async function setVolume(percent: number): Promise<number | null> {
   await cmd("wpctl", ["set-volume", "@DEFAULT_AUDIO_SINK@", `${clamped}%`]);
   return getVolume();
 }
+
+/** Minimise the kiosk Chromium window (labwc, via wlr-foreign-toplevel) so staff can reach the desktop. */
+export async function minimizeKiosk(): Promise<void> {
+  const env = { ...USER_ENV, WAYLAND_DISPLAY: process.env.WAYLAND_DISPLAY ?? "wayland-0" };
+  try {
+    await run("wlrctl", ["toplevel", "minimize", "app_id:photobooth-kiosk"], { timeout: 5_000, env });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error("wlrctl is not installed (sudo apt install wlrctl).");
+    }
+    throw new Error("Could not minimise the booth window.");
+  }
+}
